@@ -1,0 +1,14 @@
+{
+  "name": "omnipilot15b",
+  "total": 4671,
+  "train": 4204,
+  "val": 467,
+  "dropped": 0,
+  "sources": [
+    "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\demos\\synth.jsonl",
+    "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\demos\\multistep.jsonl",
+    "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\demos\\chat.jsonl"
+  ],
+  "train_path": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\omnipilot15b_train.jsonl",
+  "val_path": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\omnipilot15b_val.jsonl"
+}

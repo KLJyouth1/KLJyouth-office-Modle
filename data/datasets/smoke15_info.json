@@ -1,0 +1,16 @@
+{
+  "name": "smoke15",
+  "total": 6075,
+  "train": 5468,
+  "val": 607,
+  "dropped": 0,
+  "sources": [
+    "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\demos\\synth.jsonl",
+    "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\demos\\open_toolace.jsonl",
+    "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\demos\\chat.jsonl",
+    "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\demos\\distill.jsonl",
+    "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\demos\\sft.jsonl"
+  ],
+  "train_path": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\smoke15_train.jsonl",
+  "val_path": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\smoke15_val.jsonl"
+}

@@ -1,69 +1,93 @@
-# OmniPilot
+# KLJyouth-office-Modle
 
-**Marguerite 工作台的配套本地智能体模型。** 目标是「低运行环境需求 + 工具调用正确」：
-普通笔记本 CPU 即可运行，可完全离线，也可配合
-[Marguerite](https://github.com/KLJyouth1/Marguerite) 使用。
+**Marguerite 工作台的配套本地智能体模型仓库**：权重、训练代码、训练数据、评测集与 LoRA 适配器。
+模型统一命名格式 **`KLJyouth-office-V<版本>-<变体>`**，当前发布版本 **`KLJyouth-office-V0.16-C`**。
 
-> 本仓库是**模型仓库**（权重、分词器、Modelfile、说明），不含工作台源码。
-> 源码见 [Marguerite](https://github.com/KLJyouth1/Marguerite)，
+> 本仓库不含工作台源码。源码见 [Marguerite](https://github.com/KLJyouth1/Marguerite)，
 > 安装包见 [Marguerite-Releases](https://github.com/KLJyouth1/Marguerite-Releases)。
 
-## 模型
+---
 
-| 模型 | 架构（来自 `config.json`） | fp16 体积 | 权重 |
-|---|---|---|---|
-| **OmniPilot 0.5B** | `Qwen2ForCausalLM`，hidden 896 / 24 层 / 14 头 / kv 2，vocab 151,936，上下文 32,768 | 948.1 MB（GGUF）<br>942.3 MB（safetensors） | `omnipilot-merged-f16.gguf`<br>`omnipilot-merged/model.safetensors` |
-| **OmniPilot 1.5B** | `Qwen2ForCausalLM`，hidden 1536 / 28 层 / 12 头 / kv 2，vocab 151,936，上下文 32,768 | 2950.4 MB（GGUF）<br>2944.4 MB（safetensors） | `omnipilot15-f16.gguf`<br>`omnipilot15-merged/model.safetensors` |
+## 当前版本：KLJyouth-office-V0.16-C
 
-另有两份同代产物：`omnipilot-merged-v2-f16.gguf`（0.5B 线第二版）与
-`qwen2.5-1.5b-f16.gguf`（1.5B 线的**基座** fp16，便于对比与再微调）。
+| 项 | 值（来自 `data/adapters/omnipilot16c/train_stats.json` 与 `data/datasets/omnipilot16_info.json`） |
+|---|---|
+| 基座 | `Qwen2.5-1.5B-Instruct`（Qwen2ForCausalLM，hidden 1536 / 28 层 / 12 头，vocab 151,936，上下文 32,768） |
+| 微调方式 | LoRA（PEFT），`data/adapters/omnipilot16c/adapter_model.safetensors`（16.65 MB） |
+| 训练样本 | 3,781（另有 198 验证样本） |
+| 训练轮数 | 2 epochs，train_loss **0.1019** |
+| 数据种子 | `20261016`（可复现） |
+| 发布产物 | `KLJyouth-office-V0.16-C-adapter.safetensors`（在 Releases） |
 
-本仓库的 `omnipilot-0.5b/` 与 `omnipilot-1.5b/` 目录放了对应的
-`config.json`、`generation_config.json`、`tokenizer.json`、`tokenizer_config.json`
-与 `chat_template.jinja`——权重本身在 Releases。
+### 训练数据覆盖的 11 类能力（共 5,781 条，评测 1,060 条）
 
-### 分卷说明
+| 任务 | 总数 | 训练 / 评测 |
+|---|---|---|
+| `routing`（模型/工具路由） | 800 | 640 / 160 |
+| `tool_choice`（工具选择） | 600 | 480 / 120 |
+| `intent_massive` | 600 | 480 / 120 |
+| `intent_clinc` | 500 | 400 / 100 |
+| `emotion6` / `emotion28` | 600 / 400 | 480/120、320/80 |
+| `fact_vitaminc` | 600 | 480 / 120 |
+| `nli_mnli` / `nli_score` | 600 / 400 | 480/120、320/80 |
+| `abstain`（拒答） | 100 | 80 / 20 |
+| `grounded`（有据回答） | 100 | 80 / 20 |
 
-GitHub Release 单资产上限 **2 GiB**。上述 >2 GiB 的文件以 **7-Zip 分卷**发布
-（`*.7z.001` / `*.7z.002`）。下载同名全部卷后，对**第一卷**解压即可：
+## 历史权重（legacy，命名保留可追溯）
 
-```powershell
-7z x omnipilot15-f16.7z.001     # 会自动合并 .002 等后续卷
+早期 0.5B / 1.5B 线的 fp16 合并权重仍在 Releases（`KLJyouth-office-legacy-*`）。
+它们的**具体适配器变体未在构建记录中标注**，因此不冠以 V0.16-C 名义——只按可核实的基座与体量标注。
+如果你的记录能确认某个 legacy 文件就是 16c 合并版，告诉我，我立刻改名。
+
+| 文件 | 体积 | 说明 |
+|---|---|---|
+| `KLJyouth-office-legacy-0.5B-f16.gguf` | 948 MB | 0.5B 级 fp16 GGUF |
+| `KLJyouth-office-legacy-0.5B-f16.safetensors` | 942 MB | 同一模型的 safetensors |
+| `KLJyouth-office-legacy-0.5B-v2.7z.001/.002` | 2950 MB（展开） | 0.5B 线第二版 GGUF |
+| `KLJyouth-office-legacy-1.5B.7z.001/.002` | 2950 MB（展开） | 1.5B 级 GGUF |
+| `KLJyouth-office-legacy-1.5B-f16.safetensors.7z.001/.002` | 2944 MB（展开） | 1.5B 级 safetensors |
+| `KLJyouth-office-legacy-base-1.5B.7z.001/.002` | 2950 MB（展开） | 1.5B 基座 GGUF（对比/再微调用） |
+
+> GitHub Release 单资产上限 **2 GiB**，所以 >2 GiB 的权重以 7-Zip 分卷发布。
+> 下载同前缀全部卷后，对第一卷解压：`7z x KLJyouth-office-legacy-1.5B.7z.001`。
+> 每个资产都在 `SHA256SUMS.txt` 里。
+
+## 仓库结构
+
+```
+train/             训练代码（qlora.py、decision_data.py 等 28 个文件）
+eval/              评测台（decision_eval.py 等）
+decision/          决策引擎与 schema
+agent/ tools/      路由与工具层
+data/datasets/     训练/验证/评测数据（40.1 MB，28 个文件）
+data/adapters/     LoRA 适配器：omnipilot15 / 15b / 16 / 16b / 16c / 16d / sft
+  omnipilot16c/    ← 即 KLJyouth-office-V0.16-C（adapter_model + tokenizer + chat_template + train_stats）
+tests/             单元测试
 ```
 
-每个卷都附在 `SHA256SUMS.txt` 中。
+> 仓库**不含** `**/ckpt/**/optimizer.pt`（训练优化器状态，每份 33.4 MB，可从 `train_stats.json`
+> 与固定种子重跑复现）与 `__pycache__`。适配器权重、分词器、chat template、训练统计与数据集都在。
 
 ## 快速使用
 
-### 方式一：Marguerite 安装包（最简单）
+### 方式一：Marguerite（最省事）
+装 [Marguerite 0.2.13](https://github.com/KLJyouth1/Marguerite-Releases/releases/tag/v0.2.13)，
+「设置 → 模型」指向本地 GGUF 即可。
 
-装 [Marguerite](https://github.com/KLJyouth1/Marguerite-Releases/releases/latest)，
-在「设置 → 模型」里指向本地 GGUF 即可，无需 Ollama。
-
-### 方式二：Ollama
+### 方式二：自己合并 LoRA 并转 GGUF
 
 ```powershell
-ollama create omnipilot -f Modelfile/Modelfile.omnipilot_latest
-ollama run omnipilot "把当前目录的文件按修改时间排序"
+# 1) 合并（peft + transformers）：base = Qwen2.5-1.5B-Instruct
+#    adapter = data/adapters/omnipilot16c
+# 2) 导出 fp16 GGUF，再按需量化
+# 3) ollama create ...
 ```
 
-`Modelfile/` 里的四份文件分别对应 0.5B / 0.5B-v2 / 1.5B / 1.5B 基座；它们内置了
-Marguerite 的 tools 模板（`<tool_call>{"name":…,"arguments":…}</tool_call>`）与
-temperature / num_ctx 参数。
-
-> 量化路径的经验结论：**先转 GGUF 再量化**才可靠；直接从 safetensors 目录量化
-> （Ollama 0.15.2 实测）会产出崩溃模型。
-
-## 设计取向
-
-- **工具调用正确性优先于闲聊质量**：训练与评测围绕标准 `tool_call` 协议展开，要求模型产出
-  可解析的调用而非自然语言描述。评测台还强制 `letter_ok` 校验——未按字母选项训练的模型
-  首 token 会返回候选原文，只按字母取概率会导致**静默错误**。
-- **低环境需求**：0.5B / 1.5B 在 CPU 上即可交互，不依赖独显。
-- **不夸大能力**：评测集覆盖工具选择、参数填充、多步编排与拒答，用同口径对比基座与微调模型；
-  未测到的能力不写进说明。
+> 经验结论：量化务必**先转 GGUF 再量化**；直接从 safetensors 目录量化（Ollama 0.15.2 实测）
+> 会产出崩溃模型。
 
 ## 许可
 
-基座为 **Qwen2.5** 系列（Apache-2.0）；本仓库的微调产物与配置沿用同一许可。
-分发或商用前请自行核对基座模型的原始许可条款。
+基座 **Qwen2.5-1.5B-Instruct** 为 Apache-2.0；本仓库的训练代码、数据与适配器沿用同一许可。
+分发或商用前请自行核对基座模型与数据集（MASSIVE / CLINC150 / GoEmotions / MNLI / VitaminC 等）
+各自的原始许可。

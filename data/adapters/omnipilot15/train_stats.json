@@ -1,0 +1,8 @@
+{
+  "ok": true,
+  "base_model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "adapter_dir": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\adapters\\omnipilot15",
+  "train_samples": 4438,
+  "epochs": 1,
+  "train_loss": 0.12727797263530544
+}

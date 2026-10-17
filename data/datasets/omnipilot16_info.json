@@ -1,0 +1,94 @@
+{
+  "name": "omnipilot16",
+  "seed": 20261016,
+  "train": 3781,
+  "val": 198,
+  "eval_total": 1060,
+  "decontaminated_dropped": 0,
+  "tasks": {
+    "routing": {
+      "ok": true,
+      "total": 800,
+      "train": 640,
+      "eval": 160
+    },
+    "tool_choice": {
+      "ok": true,
+      "total": 600,
+      "train": 480,
+      "eval": 120
+    },
+    "intent_massive": {
+      "ok": true,
+      "total": 600,
+      "train": 480,
+      "eval": 120
+    },
+    "intent_clinc": {
+      "ok": true,
+      "total": 500,
+      "train": 400,
+      "eval": 100
+    },
+    "emotion6": {
+      "ok": true,
+      "total": 600,
+      "train": 480,
+      "eval": 120
+    },
+    "emotion28": {
+      "ok": true,
+      "total": 400,
+      "train": 320,
+      "eval": 80
+    },
+    "fact_vitaminc": {
+      "ok": true,
+      "total": 600,
+      "train": 480,
+      "eval": 120
+    },
+    "nli_mnli": {
+      "ok": true,
+      "total": 600,
+      "train": 480,
+      "eval": 120
+    },
+    "nli_score": {
+      "ok": true,
+      "total": 400,
+      "train": 320,
+      "eval": 80
+    },
+    "abstain": {
+      "ok": true,
+      "total": 100,
+      "train": 80,
+      "eval": 20
+    },
+    "grounded": {
+      "ok": true,
+      "total": 100,
+      "train": 80,
+      "eval": 20
+    }
+  },
+  "train_path": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\omnipilot16_train.jsonl",
+  "val_path": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\omnipilot16_val.jsonl",
+  "eval_dir": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\decision_eval",
+  "eval_files": {
+    "abstain": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\decision_eval\\abstain.jsonl",
+    "emotion28": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\decision_eval\\emotion28.jsonl",
+    "emotion6": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\decision_eval\\emotion6.jsonl",
+    "fact_evidence_noul": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\decision_eval\\fact_evidence_noul.jsonl",
+    "fact_vitaminc": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\decision_eval\\fact_vitaminc.jsonl",
+    "grounded": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\decision_eval\\grounded.jsonl",
+    "intent_clinc": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\decision_eval\\intent_clinc.jsonl",
+    "intent_massive": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\decision_eval\\intent_massive.jsonl",
+    "nli_mnli": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\decision_eval\\nli_mnli.jsonl",
+    "nli_noul": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\decision_eval\\nli_noul.jsonl",
+    "nli_score": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\decision_eval\\nli_score.jsonl",
+    "routing": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\decision_eval\\routing.jsonl",
+    "tool_choice": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\decision_eval\\tool_choice.jsonl"
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "banks": {
+    "preference": {},
+    "fact": {
+      "读取文件 nodata_xyz.xlsx 的表格内容": {
+        "key": "读取文件 nodata_xyz.xlsx 的表格内容",
+        "value": "失败：达到最大步数(5)仍未完成。最后状态：com_error: (-2147352567, '发生意外。', (0, Non",
+        "weight": 0.175,
+        "hits": 25,
+        "updated": 1792129363.7914753
+      },
+      "搜索 YOLO11 的最新进展，挑三条要点写入文件 E:/temp/yolo11": {
+        "key": "搜索 YOLO11 的最新进展，挑三条要点写入文件 E:/temp/yolo11",
+        "value": "失败：达到最大步数(12)仍未完成。最后状态：exit=1\n\n[stderr]\nAn expression was expec",
+        "weight": 0.26425,
+        "hits": 14,
+        "updated": 1792129363.7914739
+      }
+    },
+    "skill": {
+      "用 python 计算 12345*67 并告诉我结果": {
+        "key": "用 python 计算 12345*67 并告诉我结果",
+        "value": "成功：12345×67 = 827115",
+        "weight": 0.425,
+        "hits": 21,
+        "updated": 1792068872.911262
+      },
+      "打开 example.com 并告诉我页面标题": {
+        "key": "打开 example.com 并告诉我页面标题",
+        "value": "成功：页面标题是：Example Domain",
+        "weight": 0.425,
+        "hits": 6,
+        "updated": 1791989495.8269076
+      },
+      "搜索 YOLO11 的最新进展，挑三条要点写入文件 E:/temp/yolo11": {
+        "key": "搜索 YOLO11 的最新进展，挑三条要点写入文件 E:/temp/yolo11",
+        "value": "成功：已把内容 'YOLO11深度解析:相比YOLOv8的突破与场景升级 - CSDN博客\n'追加到 E:\temp\temp_y",
+        "weight": 0.8149994224999999,
+        "hits": 23,
+        "updated": 1792129363.791487
+      },
+      "帮我搜索桂林信息科技学院": {
+        "key": "帮我搜索桂林信息科技学院",
+        "value": "成功：桂林信息科技学院在本任务中被查询到，但通过搜索工具查询结果显示该学院并未被正式公布或公告。因此，当前信息不足以直接调用其",
+        "weight": 0.704225,
+        "hits": 18,
+        "updated": 1792129363.7914875
+      },
+      "操控我的电脑打开微信2": {
+        "key": "操控我的电脑打开微信2",
+        "value": "成功：要操控电脑打开微信，首先需要找到微信启动界面。根据屏幕坐标，微信位于第32行，第14列。通过点击该行和第14列，可以进入",
+        "weight": 0.425,
+        "hits": 0,
+        "updated": 1791989928.7493887
+      },
+      "在 D:\\Downloads\\yolo-ultralytics\\_t\\point": {
+        "key": "在 D:\\Downloads\\yolo-ultralytics\\_t\\point",
+        "value": "成功：已把三条项目要点写入 D:\\Downloads\\yolo-ultralytics\\_t\\points.txt",
+        "weight": 0.7479574999999999,
+        "hits": 5,
+        "updated": 1792129372.675274
+      }
+    }
+  }
+}
