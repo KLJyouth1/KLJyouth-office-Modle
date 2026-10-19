@@ -15,20 +15,35 @@ from pathlib import Path
 from ..config import ADAPTER_DIR, DATASET_DIR
 
 
-def _render(tokenizer, messages: list[dict]) -> str:
-    """用模型自带的 chat 模板渲染对话（无模板则退化为简单拼接）。"""
+def _render(tokenizer, messages: list[dict], *, generate_prompt: bool = False) -> str:
+    """用模型自带的 chat 模板渲染对话（无模板则退化为简单拼接）。
+
+    `generate_prompt=True` 渲染"待续写"的提示（末尾保留助手头 `<|im_start|>assistant\\n`），
+    供 `_encode` 计算标签掩码边界用；`False` 渲染完整对话（含助手回复）。
+    """
     if getattr(tokenizer, "chat_template", None):
         try:
-            return tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=False)
+            return tokenizer.apply_chat_template(
+                messages, tokenize=False, add_generation_prompt=generate_prompt
+            )
         except Exception:
             pass
-    return "\n".join(f"<|{m['role']}|>\n{m['content']}" for m in messages)
+    text = "\n".join(f"<|{m['role']}|>\n{m['content']}" for m in messages)
+    return text + ("<|assistant|>\n" if generate_prompt else "")
 
 
 def _encode(tokenizer, messages: list[dict], max_len: int) -> dict:
-    """编码样本，并把 prompt 部分的 label 置 -100（只学助手回复）。"""
+    """编码样本，并把 prompt 部分的 label 置 -100（只学助手回复）。
+
+    前缀必须用 `generate_prompt=True` 渲染（**这是一个已实测的真实缺陷的修复**）：
+    此前用 `add_generation_prompt=False`，前缀止于用户轮的 `<|im_end|>`，于是标签区间是
+    `'<|im_start|>assistant\\nA<|im_end|>\\n'` —— **第一个被学习的 token 是助手头而不是字母**。
+    而推理端（Ollama 的 Go 模板）已经把 `<|im_start|>assistant\\n` 预填在提示尾部，
+    只读首个生成 token 的 logprob 当字母概率。训练/推理的"回答起点"因此错开一个助手头，
+    字母概率随之失真 —— 这正是"letter_ok=1.0 但多选任务普跌甚至低于随机"的根因。
+    """
     full = _render(tokenizer, messages)
-    prefix = _render(tokenizer, messages[:-1]) if len(messages) > 1 else ""
+    prefix = _render(tokenizer, messages[:-1], generate_prompt=True) if len(messages) > 1 else ""
     ids = tokenizer(full, truncation=True, max_length=max_len, add_special_tokens=False)["input_ids"]
     pids = tokenizer(prefix, truncation=True, max_length=max_len, add_special_tokens=False)["input_ids"]
     labels = list(ids)
@@ -69,6 +84,7 @@ def train(
     use_4bit: bool = False,
     gradient_checkpointing: bool = False,
     limit: int | None = None,
+    resume_from: str | Path | None = None,
     verbose: bool = True,
 ) -> dict:
     """执行 LoRA 微调，返回训练统计。"""
@@ -244,10 +260,14 @@ def train(
     bs = batch_size
     result = None
     trainer = None
+    # 断点续训：checkpoint-XXXX 一直有落盘，但此前没有任何入口能读回它，
+    # 等于"崩溃安全"只是注释里的承诺。resume_from 让检查点真正可用；
+    # 一旦因显存故障改了 batch，就不能再沿用旧检查点（优化器步数对不上）。
+    resumed = str(resume_from) if resume_from else None
     while True:
         try:
             trainer = _build_trainer(bs)
-            result = trainer.train()
+            result = trainer.train(resume_from_checkpoint=resumed)
             break
         except RuntimeError as e:
             msg = str(e).lower()
@@ -258,6 +278,7 @@ def train(
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
             bs = max(1, bs // 2)
+            resumed = None
             if verbose:
                 print(f"[train] 显存故障（{e}），自动把 batch 降到 {bs} 重试")
     trainer.save_model(str(out))       # 只保存 LoRA 适配器
@@ -270,6 +291,7 @@ def train(
         "train_samples": len(train_rows),
         "epochs": epochs,
         "train_loss": float(result.training_loss) if result and result.training_loss else None,
+        "resumed_from": str(resume_from) if resume_from else None,
     }
     (out / "train_stats.json").write_text(json.dumps(stats, ensure_ascii=False, indent=2), encoding="utf-8")
     if verbose:

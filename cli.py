@@ -153,17 +153,25 @@ def cmd_train(args) -> int:
     from .config import DATASET_DIR
     from .train import SFTCollector, build_dataset, to_ollama, train_lora
 
-    _ensure_chat_corpus()
-    collector = SFTCollector()
-    srcs = _default_sources(args, collector)
-    info = build_dataset(srcs, name=args.name, val_ratio=args.val_ratio)
-    print(f"[数据] 总样本={info['total']} 训练={info['train']} 验证={info['val']} 丢弃={info['dropped']}")
+    if args.resume:
+        # 续训必须复用磁盘上已有的那份数据集，**绝不能**重建：
+        # build_dataset 是按 demo 源生成同名文件的，而决策数据集(omnipilot17_*)是
+        # train/decision_data.py 造的。若续训时重建，会把它整份覆盖成 demo 样本，
+        # 续训就变成在错误数据上继续跑（且是静默的）。
+        print(f"[数据] 续训：复用现有 {args.name}_train.jsonl（不重建）")
+    else:
+        _ensure_chat_corpus()
+        collector = SFTCollector()
+        srcs = _default_sources(args, collector)
+        info = build_dataset(srcs, name=args.name, val_ratio=args.val_ratio)
+        print(f"[数据] 总样本={info['total']} 训练={info['train']} 验证={info['val']} 丢弃={info['dropped']}")
 
     stats = train_lora(
         args.base, DATASET_DIR, name=args.name, epochs=args.epochs, lora_r=args.lora_r,
         max_len=args.max_len, limit=args.limit, use_4bit=args.use_4bit,
         batch_size=args.batch, grad_accum=args.grad_accum,
         gradient_checkpointing=args.grad_ckpt,
+        resume_from=args.resume,
     )
     print(json.dumps(stats, ensure_ascii=False, indent=2))
     if args.export_ollama and stats.get("ok"):
@@ -231,7 +239,8 @@ def cmd_budget(args) -> int:
     from .resource import advise, describe_plan
 
     if args.model:
-        print(describe_plan(args.model, quant_bits=args.quant_bits, ctx=args.ctx))
+        print(describe_plan(args.model, quant_bits=args.quant_bits, ctx=args.ctx,
+                            kv_type=args.kv_type))
         return 0
     print(advise(args.model_gb or 0.0))
     return 0
@@ -370,6 +379,10 @@ def build_parser() -> argparse.ArgumentParser:
     t.add_argument("--grad-accum", type=int, default=8, help="梯度累积步数")
     t.add_argument("--grad-ckpt", action="store_true", help="梯度检查点：4GB 显存必备，防溢出到内存")
     t.add_argument("--use-4bit", action="store_true", help="启用 QLoRA(需 CUDA torch + bitsandbytes)")
+    # 续训入口：Trainer 一直在按 save_steps 落 checkpoint，但此前没有任何参数能读回它，
+    # "崩溃可续"只停留在注释里（实测：中断后只能丢进度重跑）。指向 ckpt/checkpoint-N 即可。
+    t.add_argument("--resume", default=None,
+                   help="从 ckpt/checkpoint-N 续训（中断后恢复）；不传则全新开始")
     t.add_argument("--export-ollama", default=None, help="训练后注册到 Ollama 的模型名")
     t.add_argument("--ollama-base", default=None, help="导出时挂载的 Ollama 基座模型名")
 
@@ -397,6 +410,9 @@ def build_parser() -> argparse.ArgumentParser:
                    help="按已收录模型给块调度方案（qwen2.5-0.5b / 1.5b / 3b / 7b、qwen3-4b）")
     b.add_argument("--quant-bits", type=int, default=4, help="量化位宽（4/8/16）")
     b.add_argument("--ctx", type=int, default=None, help="指定上下文长度；缺省按显存自动推算")
+    b.add_argument("--kv-type", default="f16", choices=["f16", "q8_0", "q4_0"],
+                   help="KV cache 量化档位（服务端开关）。长上下文生成可开 q8_0（+16~23%% decode）；"
+                        "决策模型必须用 f16（实测 q8_0 -6.3 点、q4_0 字母输出崩溃）")
 
     bm = sub.add_parser("bench", help="推理性能实测（TTFT / tok·s⁻¹），为报告提供真实指标")
     bm.add_argument("--models", required=True, help="逗号分隔的 Ollama 模型名")
