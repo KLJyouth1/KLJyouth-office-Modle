@@ -175,15 +175,21 @@ graph LR
 
 | 版本 | 资产 | 说明 |
 |---|---|---|
-| [`v0.17-C`](https://github.com/KLJyouth1/KLJyouth-office-Modle/releases/tag/v0.17-C)（最新） | `...-adapter.safetensors` (16.7 MB)、`...-train_stats.json`、`...-q4_K_M.gguf` (940.4 MB)、`...-f16.gguf.part1/part2` (2000 / 950.4 MB)、`SHA256SUMS.txt` | 本版 |
+| [`v0.17-C`](https://github.com/KLJyouth1/KLJyouth-office-Modle/releases/tag/v0.17-C)（最新） | `...-adapter.safetensors` (16.7 MB)、`...-train_stats.json`、`...-q4_K_M.gguf` (940.4 MB)、`...-f16.gguf.part1/part2` (2000 / 950.4 MB)、**`...-merged-f16.safetensors.part1/part2` (2000 / 944.4 MB)**、**`...-merged-config.zip` (2 MB)**、`SHA256SUMS.txt` | 本版。适配器 / 可直接运行的 q4 / f16 全精度（GGUF 与 safetensors 两种容器）/ 合并权重加载所需的 config 与分词器 |
 | [`v0.16-C`](https://github.com/KLJyouth1/KLJyouth-office-Modle/releases/tag/v0.16-C) | 12 个资产（约 11 GB） | 上一发布版本 |
 | `legacy-*`（同前一个 release） | `legacy-0.5B-f16.*`、`legacy-1.5B.7z.001/.002` 等 | 早期 0.5B / 1.5B 线，命名保留可追溯 |
 
-> GitHub 单资产上限 **2 GiB**，故 3.1 GB 的 f16 GGUF 以 2 卷发布。合并**不需要装 7-Zip**：
+> GitHub 单资产上限 **2 GiB**，故 3.1 GB / 2.9 GB 的大权重以 2 卷发布。合并**不需要装 7-Zip**：
 > ```cmd
 > copy /b KLJyouth-office-V0.17-C-f16.gguf.part1+KLJyouth-office-V0.17-C-f16.gguf.part2 KLJyouth-office-V0.17-C-f16.gguf
+> copy /b KLJyouth-office-V0.17-C-merged-f16.safetensors.part1+KLJyouth-office-V0.17-C-merged-f16.safetensors.part2 KLJyouth-office-V0.17-C-merged-f16.safetensors
 > ```
 > 每个资产都在 `SHA256SUMS.txt` 里。
+>
+> **merged safetensors 怎么用**：合卷得到 `model.safetensors` 后，把 `...-merged-config.zip` 解压到**同一目录**
+> （含 `config.json` / `generation_config.json` / `tokenizer.json` / `tokenizer_config.json` / `chat_template.jinja`），
+> 即可直接被 `transformers` / `llama.cpp` 的转换器加载。若只想复现效果而不下载 2.9 GB，
+> 用 16.7 MB 的适配器 + 公开基座合并即可（见「方式三」）。
 
 ---
 
@@ -272,6 +278,115 @@ python -m omnipilot.eval.decision_eval --models omnipilot17,omnipilot16c,omnipil
 # 4) 从报告一键出全部能力图（无网络、无模型依赖）
 python scripts/make_capability_charts.py
 ```
+
+---
+
+## 🧠 类脑稀疏：我们怎么做的、边界在哪
+
+**核心约束**：4GB 显存不可能同时驻留多个专家。所以"稀疏激活"不是"把 N 个专家一起塞进显存"，
+而是**每一步只激活一个**。
+
+**两条已实现的稀疏路径**
+
+1. **专家路由（LoRA 专家按需装卸）** —— [`decision/experts.py`](decision/experts.py)
+   - 一个专家 = 基座 + 某领域 LoRA，各自注册为**独立 Ollama 模型**；
+   - 门控先用 Jev 式 Choice 选出"该交给哪个专家"，再把**只有该专家**挂到基座上推理；
+   - Ollama 按 `keep_alive` 自动卸载 → 同一时刻只有一个专家进显存，这正是稀疏激活；
+   - 门控复用 Choice 接口，白拿概率分布 + `letter_ok` 可信度 + 回退策略
+     （门控不可信就走默认专家，**宁可保守也不误路由**）。
+2. **决策候选集稀疏（prefill-only）** —— [`decision/engine.py`](decision/engine.py)
+   - 候选渲染成 `A) … B) …`，只解码极少量 token，从 logprobs 直接读候选概率；
+   - 不逐字生成 → **一次前向 = 一次决策**，开销取决于候选数而非答案长度。
+
+**⚠️ 边界（不许包装成"已完成"）**
+
+| 能力 | 代码状态 | 生产可用性 |
+|---|---|---|
+| 决策候选集稀疏（字母-logit） | 已实现 | ✅ **生产在用**（工作台六域路由 + 评测台） |
+| 专家路由 `ExpertRouter` / `ExpertRegistry` | 已实现 + 单测覆盖 | ⚠️ **当前只有测试可达**；且 `omnipilot16-code_exp` 这类**分域专家模型尚未训练** → 现在接线只会永远走默认专家回退 |
+| 主动求知 `ActiveDecider`（先查记忆 → 再上网 → 仍不可信就如实报告） | 已实现 + 单测覆盖 | ⚠️ **只有测试可达**，未接进运行时 |
+| 档位/四档路由（工作台侧） | 已实现 | 需把本地档案 id 加入 `tier_rules.json` 对应档链才生效 |
+
+> 结论：**类脑稀疏目前是"架构就绪、部分接线"**，不是"已经跑起来的能力"。
+> 要真跑起来，前置是**先训出分域专家**（6 个领域各一份 LoRA），再把门控接进工作台工具循环（见下方 P2）。
+
+---
+
+## 🎯 我们模型的特点、优势与先进性
+
+**最根本的差异**：不做逐字生成，而做**决策**——输出是候选上的概率分布 + 一个字母，
+让上层能直接做阈值、熔断与回退。
+
+| 维度 | 我们的做法 | 为什么是优势 |
+|---|---|---|
+| 决策形态 | Jev 式 Choice / Noul / Score，**prefill-only 一次前向**给出候选分布 | 省掉解码等待；上层拿到的是**概率**而非文本，可直接用于决策与回退 |
+| 诚实性 | 内置 `letter_ok` 诊断：模型没按字母作答时**明确报 False** | 概率不可信时上层能回退，避免"自信地给错答案"——这是同类小模型通常缺失的 |
+| 抗幻觉 | `abstain` 与 `grounded` **共用同一条指令**，证据内联在 state 里 | 不给措辞捷径，模型只能真去读"有没有证据" |
+| 运行环境 | q4_K_M **940 MB 可 100% 进 4GB 显存**；LoRA 仅 16.7 MB 可热插拔 | 真正的低配可用，不是"能跑但很慢" |
+| 契约化 | Choice / Noul / Score 三接口字段与官方 `example_request.json` **逐字对齐** | 换后端（云 / 本地）不需要改上层代码 |
+| 可复现 | 固定种子 + 数据与统计随仓 + 图表可从报告一键复现 | 结论可被复核，不靠"我记得" |
+| 稀疏友好 | 专家按需装卸 + 候选集稀疏 | 4GB 卡上**可行**的稀疏形态 |
+
+**先进性：必须把"架构"与"分数"分开说**
+
+- ✅ **架构层面已兑现**：字母-logit 直取概率、内置诚实度信号、三接口契约、量化到"能进 4GB 显存"的交付、
+  可复现评测与能力图。**同规模（0.5B~1.5B）的公开模型里少见**——它们通常只做聊天补全，
+  不提供决策概率与可信度诊断。
+- ⚠️ **能力层面尚未兑现**：本版宏平均 **0.3936**，且 `nli_score` 0.087、`nli_mnli` 0.143、`grounded` 0.100
+  **低于随机**，定向路由**只学会了 browser 一域**。
+  → **"先进性"目前是设计与工程上的，不是分数上的。**
+- ❌ **不做虚假承诺**：7B / 万亿参数 / 全模态 / 世界模型在 4GB 上本地训练**物理不可行**；
+  这类能力只能以"接入 + 编排"获得，**不计入本仓库的训练成果**。
+
+---
+
+## 🔭 未来方向与计划
+
+### P0 · V0.18：重训验证「标签掩码修复」（当前最高优先级）
+
+- **唯一目的**：验证 [根因①](docs/工程日志-训练与根因.md) 的修复是否真的提升字母概率质量。
+- **做法**：超参**完全不变**（`lr=2e-4`、`r=16/alpha=32`、`batch=1×accum=8`、`max_len=768`、
+  `gradient_checkpointing`、4-bit QLoRA、2 epochs、同种子），**只改** `train/qlora.py` 的标签掩码起点
+  → 重训 → 与 V0.17 **同口径**评测。
+- **验收标准（先写死，避免事后解释）**：`nli_score` / `nli_mnli` **回到或超过随机**，
+  且宏平均**显著高于 0.3936**；否则判定修复无效，继续找根因，**不做"看起来变好了"的叙事**。
+- **代价**：约 1.5 小时占满显卡（实测 9~14 s/it，4GB 卡）。
+
+### P1 · 修掉另外三个已定位缺陷
+
+1. **NLI 低于随机**：逐任务核对「候选渲染顺序 × 标准答案字母 × `answer_is_correct` 判分口径」
+   三者是否真的一致（历史上出现过两任务候选顺序相反、正确答案字母互换的坑）。
+2. **`grounded` 崩塌**：让 `abstain` / `grounded` 真正只能靠 state 里**有没有证据**区分。
+3. **定向路由只学会 browser**：定向数据补入"同域多表述"（不含网址、不含域名词的句子），
+   逼模型学语义而不是抓"有网址 → 浏览器"这个捷径。
+
+### P2 · 稀疏与蒸馏（两条主线）
+
+- **分域专家训练**：`code / office / browser / media / blender / system` 六个领域各训一份 LoRA，
+  再把 `ExpertRouter` 接进工作台工具循环 —— 这才让"类脑稀疏"从**架构就绪**变成**真的跑起来**。
+- **教师软标签蒸馏**：用本地更强的老师模型（如 `qwen3:4b`）产出**经过验证**的软标签
+  （工具名必须在真实清单内、必填参数齐全、数值必须来自工具输出），**未通过验证的一律丢弃** ——
+  从源头降低幻觉，而不是事后补丁。
+
+### P3 · 接入工作台四档路由
+
+- 把本模型注册为**本地档案**（`kind=local`、`base_url=http://127.0.0.1:11434`），
+  按实测能力放进合适档位链（本地小模型因上下文与单价特征，天然落**极速档**）；
+- 工作台侧的**档位治理已接通**（档内候选必须过准入线、凭证与主客户端同源解析、缺密钥的云候选剔除），
+  本地档案一旦入链即可参与回退。
+
+### P4 · 数据与评测的下一轮
+
+- **扩容薄切片**：`directed_tool_choice` 的 `blender`(n=4) / `code`(n=7) 必须先补到每域 ≥40，
+  否则"逐域工具能力"的结论没有统计意义；
+- **评测集冻结版本号**：避免重演"评测集被改 → 旧报告不可比"（本轮已真实发生过一次，
+  当时的旧报告与今天结果直接冲突）。
+
+### 长期 · 明确不做的事
+
+- 不在 4GB 上训练 >1.5B；
+- 不把"接入云端大模型"包装成自研成果；
+- **不发布没有同口径测评数字的版本**。
 
 ---
 
