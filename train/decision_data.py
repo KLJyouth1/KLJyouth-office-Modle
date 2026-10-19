@@ -468,6 +468,301 @@ def build_grounded(rng: random.Random, n: int) -> list[tuple[dict, dict]]:
     return out
 
 
+# ---------------------------------------------------------------- 四域定向数据
+#
+# 目标：把"电脑/系统/浏览器操控、办公软件、3D 建模、视频图像、代码"这五类
+# 真实工作负载灌进决策训练集。为什么必须单独造，而不是继续用 demo：
+# demo 里的任务句式集中在少数模板上，`routing` 的准确率已接近关键词基线（0.97），
+# 说明它测不到真实增量。定向数据的作用是覆盖**关键词启发式覆盖不到**的表述
+# （例如"把这批图统一成 800x600"没有出现"图片"以外的 media 关键词），
+# 从而让决策层在 hybrid 路由下真正接管长尾请求。
+#
+# 两条数据线，分别对应推理端真实存在的两种决策：
+# 1. directed_routing       —— 与 agent/router.py 的六域 choice **完全同构**
+#                              （候选、指令、提示渲染都一致）。
+# 2. directed_tool_choice   —— 域内 45 个真实工具的细粒度选择。当前推理链路
+#                              尚未消费它，但它把"工具语义"灌进模型，是后续
+#                              工具调用阶段的必要前置；也是域判断的强化信号。
+#
+# 造数据的硬约束（来自本项目已踩过的坑）：**每条模板都必须带随机占位符**。
+# 旧版 abstain 就是 12 个无参模板循环生成 300 条，去重后只剩 12 条有效样本，
+# 任务权重被静默降到 1/25。这里的占位符池远比模板数大，保证去重后不塌陷。
+_URLS = ("https://example.com/login", "https://news.ycombinator.com",
+         "https://docs.python.org/3/library/asyncio.html", "http://localhost:5173",
+         "https://github.com/torvalds/linux", "https://www.bilibili.com/video/BV1xx")
+_QUERIES = ("今天的天气", "Python 3.14 新特性", "RTX 3050 显存规格",
+            "GB/T 7714 引用格式", "Windows 11 关闭自动更新", "Qwen2.5 微调显存占用")
+_TEXTS = ("admin", "订单编号 A1024", "季度总结", "hello world", "张三", "2026-10-18")
+_PATHS = ("config.yaml", "src/main.py", "D:\\work\\notes.md", "data\\orders.csv",
+          "app\\settings.json", "utils\\helpers.py")
+_REPOS = ("D:\\Downloads\\Marguerite", "D:\\Downloads\\yolo-ultralytics", "D:\\work\\webapp",
+          "E:\\code\\demo", "C:\\Users\\Administrator\\project")
+_OFFICE_FILES = ("budget.xlsx", "D:\\work\\report.xlsx", "contract.docx", "周报.docx",
+                 "季度汇报.pptx", "data\\orders.xlsx")
+_MEDIA_FILES = ("input.mp4", "D:\\video\\clip.mov", "assets\\demo.webm",
+                "screen_record.mkv", "output\\vlog.mp4")
+_IMAGE_FILES = ("photo.jpg", "D:\\pics\\cover.png", "assets\\logo.webp", "screenshots\\shot.png")
+_BLEND_FILES = ("scene.blend", "E:\\assets\\chair.blend", "D:\\3d\\island.blend", "models\\room.blend")
+_KEYS = ("enter", "tab", "esc", "space", "backspace")
+_COMBOS = ("ctrl+s", "ctrl+shift+esc", "alt+tab", "ctrl+z", "win+d")
+_SELECTORS = ("#login-btn", ".btn-primary", "input[name=q]", "#result", "div.list > a")
+
+_DIRECTED_DOMAIN_TEMPLATES: dict[str, list[str]] = {
+    "browser": [
+        "打开 {url} 看看这个页面上写了什么",
+        "在浏览器里访问 {url} 并完成登录",
+        "搜索一下「{query}」的最新结果，取前 {idx} 条",
+        "把 {url} 的正文抓下来做摘要",
+        "点开页面上写着「{text}」的那个按钮",
+        "在登录表单里填入「{text}」再提交",
+        "看看 {url} 这个标签页的地址和标题",
+        "等「{text}」这个结果出现后再截图",
+        "给 {url} 这个页面截张图保存下来",
+        "把 {url} 页面里所有可点击元素和坐标列出来",
+        "把网页向下滚动 {px} 像素继续读",
+    ],
+    "office": [
+        "新建一个 Excel，把 {cnt} 行销售数据写进 A1 开始的区域",
+        "读取 {ofile} 里的数据并汇总",
+        "生成一份周报 Word 文档到 {ofile}，包含三段正文",
+        "把会议纪要写成 Word 保存到 {ofile}",
+        "做一份 {cnt} 页的 PPT 介绍季度业绩",
+        "从 {ofile} 里读出最近 {cnt} 天的订单明细",
+        "在 {ofile} 的第 {idx} 个工作表写入统计结果",
+        "打开 {ofile} 读一下正文内容",
+        "把这份报告整理成 {cnt} 页幻灯片存到 {ofile}",
+        "在表格 {ofile} 里追加一行汇总数据",
+    ],
+    "code": [
+        "看一下 {repo} 仓库有哪些未提交改动",
+        "查看 {repo} 最近 {idx} 条 git 提交记录",
+        "在 {repo} 运行 npm run build 并查看报错",
+        "用 Python 写脚本计算前 {num} 个素数",
+        "把这段配置写进 {path}",
+        "读取 {path} 的内容帮我分析",
+        "在 {repo} 里执行 pytest 并返回失败用例",
+        "新建 {path} 并写入工具函数",
+        "在 {repo} 跑一下 git status 看看有没有冲突",
+        "编译 {repo} 这个 Rust 项目并修复报错",
+    ],
+    "media": [
+        "把 {media} 转码成 H.264 的 mp4",
+        "从第 {sec} 秒开始裁剪 {dur} 秒视频",
+        "把 {media} 的音轨抽成 mp3",
+        "从 {media} 每秒抽一帧导出成图片",
+        "查看 {media} 的分辨率和码率",
+        "把图片 {img} 缩放到 {w}x{h}",
+        "裁剪 {img}，去掉四周 {px} 像素的空白边框",
+        "查看图片 {img} 的尺寸和格式",
+        "把 {media} 压到 {num} MB 以下",
+        "批量把这 {cnt} 张图片调整成统一尺寸",
+    ],
+    "blender": [
+        "用 Blender 脚本建一个 {cnt} 面的立方体并加材质",
+        "把 {blend} 的第 1 帧渲染成图片",
+        "检查一下本机有没有装 Blender，版本要 {num} 以上",
+        "写一段 bpy 脚本给场景加 {idx} 盏灯",
+        "给 {blend} 这个模型加上木纹材质再渲染",
+        "用 Blender 无头模式导出 {blend} 到 glb",
+        "在 Blender 里把模型细分到 {num} 面",
+        "渲染 {blend} 场景的第 {idx} 帧",
+        "在 {blend} 里批量摆放 {cnt} 个道具",
+        "把 {blend} 的渲染分辨率设成 {w}x{h}",
+    ],
+    "system": [
+        "在屏幕坐标 ({x}, {y}) 点击鼠标左键",
+        "把鼠标移动到屏幕 ({x}, {y})",
+        "在当前窗口输入「{text}」",
+        "按下 {combo} 保存当前文档",
+        "按 {idx} 次退格删掉刚才的字",
+        "截取屏幕 ({x},{y}) 开始的 {w}x{h} 区域保存成图片",
+        "向下滚动 {px} 像素查看下面的内容",
+        "双击桌面坐标 ({x}, {y}) 的 Chrome 图标打开它",
+        "用快捷键 {combo} 切换到上一个窗口",
+        "打开任务栏第 {idx} 个图标对应的应用",
+    ],
+}
+
+# 工具名逐一取自 omnipilot/tools/*.py 的 build_tools()，不臆造。
+_DIRECTED_TOOL_INTENTS: dict[str, dict[str, list[str]]] = {
+    "browser": {
+        "browser_goto": ["打开 {url} 这个网址", "在浏览器里访问 {url}",
+                         "跳转到 {url} 页面", "导航到 {url} 并等待加载完成"],
+        "browser_click_text": ["点击页面上写着「{text}」的按钮", "点一下「{text}」这个链接",
+                               "找到包含「{text}」的元素并点击", "点击文本为「{text}」的菜单项"],
+        "browser_click_selector": ["用 CSS 选择器 {sel} 点击对应元素", "点击选择器 {sel} 匹配的按钮",
+                                   "选择器 {sel} 指向的那个元素点一下", "按选择器 {sel} 定位并单击"],
+        "browser_click_xy": ["在页面坐标 ({x}, {y}) 处点击", "点击网页上 ({x}, {y}) 这个位置",
+                             "按页面横纵坐标 ({x}, {y}) 点一下", "在页面 ({x}, {y}) 单击左键"],
+        "browser_fill": ["在 {sel} 输入框里填入 {text}", "往选择器 {sel} 的输入框填写 {text}",
+                         "把 {text} 填进 {sel} 表单字段", "在 {sel} 里输入 {text} 并保持焦点"],
+        "browser_press": ["在页面里按下 {key} 键", "给当前网页发送一次 {key} 按键",
+                          "按 {key} 触发页面提交", "在页面焦点处敲 {key}"],
+        "browser_scroll": ["把网页向下滚动 {px} 像素", "页面往下滚 {px} 像素",
+                           "向下滚动页面 {px} 像素继续阅读", "把页面向上滚回 {px} 像素"],
+        "browser_back": ["从 {url} 回退到上一页", "返回上一个页面（当前在 {url}）",
+                         "后退到之前那个网页", "浏览器回退一步"],
+        "browser_wait_for": ["等待页面上出现「{text}」再继续", "等 {sel} 这个元素加载出来",
+                             "等页面出现「{text}」文本后再操作", "等待 {sel} 出现在 DOM 中，最多 {idx} 秒"],
+        "browser_url": ["读出当前页面的地址和标题", "看一下浏览器现在停在哪个网址",
+                        "获取当前标签页的 URL 和标题", "确认 {url} 是否已经跳转成功"],
+        "browser_snapshot": ["获取页面可交互元素清单（带坐标）", "把页面上的按钮和输入框列出来",
+                             "生成页面元素快照方便精确点击", "列出页面坐标可点的元素，最多 {cnt} 个"],
+        "browser_text": ["提取当前网页的正文文本", "把网页内容读出来给我看",
+                         "获取页面正文（限制 {cnt} 字）", "读一下 {url} 页面的文字内容"],
+        "browser_screenshot": ["给当前网页截张图存到 shot.png", "对页面截图保存",
+                               "把网页画面截下来", "把 {url} 页面截图到 shots\\{idx}.png"],
+        "browser_wait": ["等待 1500 毫秒再操作", "先等 2 秒让动画结束",
+                         "暂停 500 毫秒再点下一步", "等 {idx} 秒后再继续"],
+        "web_search": ["联网搜索「{query}」", "帮我查一下最新的 {query}",
+                       "检索 {query} 相关的 {idx} 条结果", "搜索 {query} 并给出前几条摘要"],
+        "web_fetch": ["抓取 {url} 的正文内容", "把 {url} 这篇文章读下来",
+                      "访问 {url} 并提取可读正文", "抓取 {url} 前 {cnt} 字正文"],
+    },
+    "system": {
+        "sys_click": ["在屏幕坐标 ({x}, {y}) 点一下鼠标", "双击屏幕上 ({x}, {y}) 的图标",
+                      "右键点击 ({x}, {y}) 位置", "在 ({x}, {y}) 连续点击 {idx} 次"],
+        "sys_move": ["把鼠标移到屏幕 ({x}, {y})", "移动鼠标到坐标 ({x}, {y})",
+                     "把光标挪到 ({x}, {y})", "将鼠标移动到 ({x}, {y}) 悬停 {idx} 秒"],
+        "sys_type": ["在当前焦点输入「{text}」", "敲入这段中文：{text}",
+                     "把 {text} 打到当前输入框", "输入 {text} 后按一次回车"],
+        "sys_hotkey": ["按下 {combo} 组合键", "用快捷键 {combo}",
+                       "发送组合键 {combo}", "触发 {combo} 热键"],
+        "sys_press": ["按下 {key} 键", "按 {idx} 次 {key}",
+                      "单独按一次 {key}", "在焦点处敲击 {key} 键"],
+        "sys_scroll": ["在屏幕上向下滚动 {px} 像素", "滚轮向上滚 {px} 像素",
+                       "滚动屏幕 {px} 像素查看下方内容", "把屏幕往回滚 {px} 像素"],
+        "sys_screenshot": ["截取整个屏幕保存成图片", "给桌面截个图",
+                           "抓一张全屏截图", "截取第 {idx} 块显示器保存成图片"],
+    },
+    "office": {
+        "excel_write": ["把这两行数据写进 {ofile} 的 A1", "向 Excel 写入 {cnt} 行销售明细并保存到 {ofile}",
+                        "在 {ofile} 第 {idx} 个工作表写入统计结果", "把汇总数据追加到 {ofile} 末尾"],
+        "excel_read": ["读取 {ofile} 前 {cnt} 行", "把 {ofile} 里的数据读出来",
+                       "打开 {ofile} 预览表格内容", "读取 {ofile} 第 {idx} 个工作表的数据"],
+        "word_create": ["新建 Word 文档 {ofile}，标题是「{text}」", "在 {ofile} 写入 {cnt} 段正文",
+                        "生成一份包含标题和正文的 Word 文档到 {ofile}",
+                        "把「{text}」整理成 Word 文档保存到 {ofile}"],
+        "word_read": ["读取 {ofile} 的正文", "打开 Word 文档 {ofile} 看看内容",
+                      "把 {ofile} 里的文字提取出来", "读一下 {ofile} 前 {cnt} 段正文"],
+        "ppt_create": ["生成一个 {cnt} 页的 PPT 存到 {ofile}", "把汇报内容做成幻灯片 {ofile}",
+                       "创建演示文稿 {ofile}，每页含标题和要点", "用「{text}」做 {cnt} 页幻灯片"],
+    },
+    "blender": {
+        "blender_run_script": ["用 bpy 脚本建一个 {cnt} 面的立方体并加材质",
+                               "无头执行一段 Blender Python 建模脚本",
+                               "在 Blender 里跑脚本批量布置 {idx} 盏灯光",
+                               "写 bpy 脚本把 {blend} 里的模型复制 {cnt} 份"],
+        "blender_render": ["渲染 {blend} 的第 1 帧到 render.png", "把 {blend} 场景渲染成图片",
+                           "渲染 {blend} 的第 {idx} 帧", "按 {w}x{h} 分辨率渲染 {blend}"],
+        "blender_available": ["检查本机有没有安装 Blender", "确认 Blender 是否可用",
+                              "看看 Blender 版本信息", "确认 Blender {num} 以上版本是否可用"],
+    },
+    "media": {
+        "video_convert": ["把 {media} 转码成 output.mkv", "把 {media} 转成 H.264 的 mp4",
+                          "用 ffmpeg 转换 {media} 的格式", "把 {media} 转码并压缩到 {num} MB"],
+        "video_trim": ["裁剪 {media}，从第 {sec} 秒开始取 {dur} 秒", "截取 {media} 第 {sec} 秒起的片段",
+                       "把 {media} 从第 {sec} 秒起截 {dur} 秒", "裁掉 {media} 开头 {sec} 秒"],
+        "video_extract_audio": ["从 {media} 里把音轨抽成 mp3", "提取 {media} 的音频",
+                               "把 {media} 的声音导出为 mp3", "从 {media} 分离出第 {idx} 条音轨"],
+        "video_extract_frames": ["从 {media} 每秒抽一帧导出成图片", "按 2 fps 抽取 {media} 的帧",
+                                 "把 {media} 拆成逐帧图片", "从 {media} 第 {sec} 秒起按 1 fps 抽帧"],
+        "video_probe": ["查看 {media} 的分辨率、码率和时长", "读取 {media} 的元信息",
+                        "probe 一下 {media} 的视频参数", "检查 {media} 是不是 H.264 编码"],
+        "image_resize": ["把图片 {img} 缩放到 {w}x{h}", "把 {img} 改成 {w}x{h}",
+                         "调整 {img} 的尺寸到 {w} 宽", "把 {img} 等比缩放到宽度 {w}"],
+        "image_crop": ["裁剪 {img}，去掉四周 {px} 像素的空白边框", "按矩形区域裁剪 {img}",
+                       "裁掉 {img} 右侧 {px} 像素的空白", "把 {img} 左上角裁掉 {px} 像素"],
+        "image_info": ["查看 {img} 的尺寸和格式", "读取 {img} 的宽高信息",
+                       "确认 {img} 是什么格式", "检查 {img} 是否超过 {num} KB"],
+    },
+    "code": {
+        "file_write": ["把这段配置内容写入 {path}", "新建 {path} 并写入初始化代码",
+                       "往 {path} 末尾追加一条日志", "把生成的 {cnt} 行结果保存到 {path}"],
+        "file_read": ["读取 {path} 的内容", "打开 {path} 看看里面写了什么",
+                      "把 {path} 前 {cnt} 行读出来", "读取 {path} 并统计行数"],
+        "code_run": ["在 {repo} 执行 npm run build", "在 {repo} 运行 pytest 看哪些用例失败",
+                     "在 {repo} 执行 cargo build 检查编译错误", "在 PowerShell 里跑 {path} 相关的命令"],
+        "code_python": ["执行一段 Python 代码计算前 {num} 个素数", "跑个 Python 脚本统计 CSV 的 {cnt} 行数据",
+                        "用 Python 验证这个正则能否匹配", "执行 Python 代码把 {path} 转成 JSON"],
+        "git_status": ["查看 {repo} 仓库有哪些未提交改动", "看看 {repo} 工作区有没有冲突文件",
+                       "检查 {repo} 暂存区里有哪些文件", "确认 {repo} 有没有未跟踪的新文件"],
+        "git_log": ["查看 {repo} 最近 {idx} 条提交记录", "看看 {repo} 最近几次 commit 改了什么",
+                    "列出 {repo} 最近 {idx} 次提交标题", "读一下 {repo} 最近 {idx} 条提交说明"],
+    },
+}
+
+
+def _fill(tpl: str, rng: random.Random) -> str:
+    """把模板里的占位符填成随机的真实取值（保证样本互不相同）。"""
+    return tpl.format(
+        url=rng.choice(_URLS), query=rng.choice(_QUERIES), text=rng.choice(_TEXTS),
+        path=rng.choice(_PATHS), repo=rng.choice(_REPOS), ofile=rng.choice(_OFFICE_FILES),
+        media=rng.choice(_MEDIA_FILES), img=rng.choice(_IMAGE_FILES), blend=rng.choice(_BLEND_FILES),
+        num=rng.randint(2, 999), px=rng.randint(100, 1200), idx=rng.randint(1, 12),
+        cnt=rng.randint(2, 60), key=rng.choice(_KEYS), combo=rng.choice(_COMBOS),
+        sel=rng.choice(_SELECTORS),
+        x=rng.randint(10, 1900), y=rng.randint(10, 1000),
+        w=rng.choice((640, 800, 1280, 1920)), h=rng.choice((360, 600, 720, 1080)),
+        sec=rng.randint(1, 300), dur=rng.randint(2, 60),
+    )
+
+
+def _fill_unique(tpl: str, rng: random.Random, seen: set[str], tries: int = 12) -> str:
+    """渲染模板并尽量避开已用过的 state。
+
+    为什么需要它：占位符池虽大于模板数，但随机抽样仍会撞车（实测 600 条里
+    有 182 条重复，去重后只剩 418 条）。重采样能把重复压下去；当某条模板的
+    组合空间真的耗尽时（如「输入『{text}』」只有 6 个取值）接受重复，
+    避免死循环——这与旧版"无参模板刷量"是两回事，不会让某个任务塌成个位数。
+    """
+    state = _fill(tpl, rng)
+    for _ in range(tries):
+        if state not in seen:
+            break
+        state = _fill(tpl, rng)
+    seen.add(state)
+    return state
+
+
+def build_directed_routing(rng: random.Random, n: int) -> list[tuple[dict, dict]]:
+    """定向六域路由：句式与推理端 `agent/router.py` 完全同构。"""
+    doms = list(_DIRECTED_DOMAIN_TEMPLATES)
+    seen: set[str] = set()
+    out = []
+    i = 0
+    while len(out) < n:
+        dom = doms[i % len(doms)]
+        tpls = _DIRECTED_DOMAIN_TEMPLATES[dom]
+        state = _fill_unique(tpls[(i // len(doms)) % len(tpls)], rng, seen)
+        q = {"type": CHOICE, "instructions": "这条用户请求应该交给哪个工具域处理？",
+             "criteria": dict(DOMAIN_DESC)}
+        out.append(_record(state, q, dom,
+                           {"task": "directed_routing", "source": "synthetic", "domain": dom}))
+        i += 1
+    return out
+
+
+def build_directed_tool_choice(rng: random.Random, n: int) -> list[tuple[dict, dict]]:
+    """定向域内工具选择：候选=该域全部真实工具（≤26，保证单字母可映射）。"""
+    flat = [(dom, tool, tpls) for dom, tools in _DIRECTED_TOOL_INTENTS.items()
+            for tool, tpls in tools.items()]
+    seen: set[str] = set()
+    out = []
+    i = 0
+    while len(out) < n:
+        dom, tool, tpls = flat[i % len(flat)]
+        order = list(_DIRECTED_TOOL_INTENTS[dom])
+        rng.shuffle(order)
+        state = _fill_unique(tpls[(i // len(flat)) % len(tpls)], rng, seen)
+        q = {"type": CHOICE, "instructions": "要完成这个任务，应该调用哪个工具？",
+             "criteria": {t: "" for t in order}}
+        out.append(_record(state, q, tool,
+                           {"task": "directed_tool_choice", "source": "synthetic", "domain": dom}))
+        i += 1
+    return out
+
+
 # ---------------------------------------------------------------- 组装
 BUILDERS = {
     "routing": 800,            # 训练样本上限（按任务）
@@ -481,6 +776,9 @@ BUILDERS = {
     "nli_score": 400,
     "abstain": 100,
     "grounded": 100,
+    # 四域定向：句式与推理端同构，且每条模板都带随机占位符（去重后不塌陷）
+    "directed_routing": 600,        # 100/域，覆盖关键词启发式够不到的长尾表述
+    "directed_tool_choice": 480,    # ≈10.7/工具，45 个真实工具全覆盖
 }
 
 
@@ -543,6 +841,10 @@ def build_decision_dataset(
                 pairs = build_abstain(rng, BUILDERS[task])
             elif task == "grounded":
                 pairs = build_grounded(rng, BUILDERS[task])
+            elif task == "directed_routing":
+                pairs = build_directed_routing(rng, BUILDERS[task])
+            elif task == "directed_tool_choice":
+                pairs = build_directed_tool_choice(rng, BUILDERS[task])
             else:
                 raise ValueError(f"未知任务：{task}")
         except Exception as e:  # noqa: BLE001
@@ -627,4 +929,5 @@ __all__ = [
     "DOMAIN_DESC", "domain_of_tool", "build_decision_dataset",
     "build_routing", "build_tool_choice", "build_intent_massive", "build_intent_clinc",
     "build_emotion6", "build_emotion28", "build_fact_vitaminc", "build_nli_mnli", "build_abstain",
+    "build_grounded", "build_directed_routing", "build_directed_tool_choice",
 ]

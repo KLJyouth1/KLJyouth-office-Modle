@@ -318,3 +318,63 @@ class TestExpertRouter:
         r = ExpertRouter(ExpertRegistry(), client=FakeClient([("A", -0.1)]))
         out = r.decide("状态", {"q": {"type": "noul", "instructions": "是否？"}})
         assert out["answers"] == {} and "error" in out
+
+
+# ------------------------------------------------------------------ 四域定向数据
+class TestDirectedData:
+    """锁定定向数据的两条硬约束：字母可逆、去重后不塌陷。
+
+    为什么值得用测试锁住：这两条都是**已经真实踩过的坑**——
+    字母不可逆 → 训练与推理口径错位，概率静默给错答案；
+    模板无参数 → 300 条样本去重后只剩 12 条，任务权重被静默稀释 25 倍。
+    """
+
+    @staticmethod
+    def _pairs(builder, n):
+        import random
+
+        return builder(random.Random(20261017), n)
+
+    def test_directed_routing_is_balanced_and_letter_invertible(self):
+        from omnipilot.config import DOMAIN_DESC
+        from omnipilot.train.decision_data import build_directed_routing
+
+        pairs = self._pairs(build_directed_routing, 600)
+        assert len(pairs) == 600
+        per_domain = {}
+        for chat, dec in pairs:
+            q = dec["questions"]["choice"]
+            assert list(q["criteria"]) == list(DOMAIN_DESC)      # 与推理端候选完全同构
+            gold = dec["gold"]["choice"]["value"]
+            letter = chat["messages"][-1]["content"]
+            assert list(q["criteria"])["ABCDEFGHIJKLMNOPQRSTUVWXYZ".index(letter)] == gold
+            per_domain[gold] = per_domain.get(gold, 0) + 1
+        assert set(per_domain) == set(DOMAIN_DESC)
+        assert set(per_domain.values()) == {100}                  # 六域严格等量
+        # 去重后仍应保有足够样本（实测 457；低于 400 说明模板多样性退化）
+        assert len({dec["state"] for _, dec in pairs}) >= 400
+
+    def test_directed_tool_choice_covers_every_real_tool(self):
+        from omnipilot.tools import build_registry
+        from omnipilot.train.decision_data import _DIRECTED_TOOL_INTENTS, build_directed_tool_choice
+
+        pairs = self._pairs(build_directed_tool_choice, 480)
+        assert len(pairs) == 480
+        real = {t.name: t.domain for t in build_registry(headless=True).all()}
+        declared = {name for tools in _DIRECTED_TOOL_INTENTS.values() for name in tools}
+        assert declared == set(real)                              # 不臆造、也不漏掉真实工具
+        for dom, tools in _DIRECTED_TOOL_INTENTS.items():
+            for name in tools:
+                assert real[name] == dom
+
+        picked = set()
+        for chat, dec in pairs:
+            q = dec["questions"]["choice"]
+            assert len(q["criteria"]) <= 26                       # 单字母可映射
+            gold = dec["gold"]["choice"]["value"]
+            letter = chat["messages"][-1]["content"]
+            assert list(q["criteria"])["ABCDEFGHIJKLMNOPQRSTUVWXYZ".index(letter)] == gold
+            picked.add(gold)
+        assert picked == declared                                 # 45 个工具全部有训练样本
+        assert len({dec["state"] for _, dec in pairs}) >= 400
+
