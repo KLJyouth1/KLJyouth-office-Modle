@@ -1,0 +1,37 @@
+{
+  "name": "omnipilot17",
+  "seed": 20261017,
+  "derived_from": "omnipilot16",
+  "train": 4327,
+  "val": 227,
+  "eval_total": 1260,
+  "decontaminated_dropped": 0,
+  "dedup_dropped": 107,
+  "added_tasks": {
+    "directed_routing": 600,
+    "directed_tool_choice": 480
+  },
+  "train_tasks": {
+    "intent_massive": 437,
+    "emotion6": 433,
+    "routing": 412,
+    "directed_routing": 379,
+    "tool_choice": 370,
+    "directed_tool_choice": 361,
+    "intent_clinc": 355,
+    "nli_score": 289,
+    "emotion28": 282,
+    "nli_mnli": 260,
+    "fact_vitaminc": 225,
+    "fact_evidence_noul": 210,
+    "nli_noul": 169,
+    "abstain": 74,
+    "grounded": 71
+  },
+  "new_eval_files": {
+    "directed_tool_choice": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\decision_eval\\directed_tool_choice.jsonl",
+    "directed_routing": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\decision_eval\\directed_routing.jsonl"
+  },
+  "train_path": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\omnipilot17_train.jsonl",
+  "val_path": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\omnipilot17_val.jsonl"
+}
