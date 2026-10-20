@@ -1,0 +1,279 @@
+{
+  "eval_dir": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\decision_eval",
+  "limit": null,
+  "results": [
+    {
+      "model": "qwen2.5-1.5b",
+      "macro_accuracy": 0.4025,
+      "letter_ok_rate": 0.8194,
+      "per_task": {
+        "abstain": {
+          "task": "abstain",
+          "n": 60,
+          "accuracy": 0.7833,
+          "letter_ok_rate": 0.2333,
+          "mean_conf": 0.7038
+        },
+        "emotion28": {
+          "task": "emotion28",
+          "n": 80,
+          "accuracy": 0.2875,
+          "letter_ok_rate": 0.9375,
+          "mean_conf": 0.7781
+        },
+        "emotion6": {
+          "task": "emotion6",
+          "n": 120,
+          "accuracy": 0.375,
+          "letter_ok_rate": 0.85,
+          "mean_conf": 0.8223
+        },
+        "fact_evidence_noul": {
+          "task": "fact_evidence_noul",
+          "n": 65,
+          "accuracy": 0.4308,
+          "letter_ok_rate": 0.0,
+          "mean_conf": 0.6484
+        },
+        "fact_vitaminc": {
+          "task": "fact_vitaminc",
+          "n": 55,
+          "accuracy": 0.4545,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.7852
+        },
+        "intent_clinc": {
+          "task": "intent_clinc",
+          "n": 100,
+          "accuracy": 0.42,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.8328
+        },
+        "intent_massive": {
+          "task": "intent_massive",
+          "n": 120,
+          "accuracy": 0.2917,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.7535
+        },
+        "nli_mnli": {
+          "task": "nli_mnli",
+          "n": 70,
+          "accuracy": 0.3143,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.937
+        },
+        "nli_noul": {
+          "task": "nli_noul",
+          "n": 50,
+          "accuracy": 0.76,
+          "letter_ok_rate": 0.16,
+          "mean_conf": 0.8469
+        },
+        "nli_score": {
+          "task": "nli_score",
+          "n": 80,
+          "accuracy": 0.3375,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.7632
+        },
+        "routing": {
+          "task": "routing",
+          "n": 160,
+          "accuracy": 0.175,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.8678
+        },
+        "tool_choice": {
+          "task": "tool_choice",
+          "n": 120,
+          "accuracy": 0.2,
+          "letter_ok_rate": 0.8417,
+          "mean_conf": 0.8648
+        }
+      }
+    },
+    {
+      "model": "omnipilot-1.5b-v2",
+      "macro_accuracy": 0.3441,
+      "letter_ok_rate": 0.7481,
+      "per_task": {
+        "abstain": {
+          "task": "abstain",
+          "n": 60,
+          "accuracy": 0.1333,
+          "letter_ok_rate": 0.0,
+          "mean_conf": 0.7464
+        },
+        "emotion28": {
+          "task": "emotion28",
+          "n": 80,
+          "accuracy": 0.3125,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.6918
+        },
+        "emotion6": {
+          "task": "emotion6",
+          "n": 120,
+          "accuracy": 0.3667,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.7901
+        },
+        "fact_evidence_noul": {
+          "task": "fact_evidence_noul",
+          "n": 65,
+          "accuracy": 0.2462,
+          "letter_ok_rate": 0.1846,
+          "mean_conf": 0.9835
+        },
+        "fact_vitaminc": {
+          "task": "fact_vitaminc",
+          "n": 55,
+          "accuracy": 0.2182,
+          "letter_ok_rate": 0.0364,
+          "mean_conf": 0.7677
+        },
+        "intent_clinc": {
+          "task": "intent_clinc",
+          "n": 100,
+          "accuracy": 0.68,
+          "letter_ok_rate": 0.97,
+          "mean_conf": 0.8474
+        },
+        "intent_massive": {
+          "task": "intent_massive",
+          "n": 120,
+          "accuracy": 0.375,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.7408
+        },
+        "nli_mnli": {
+          "task": "nli_mnli",
+          "n": 70,
+          "accuracy": 0.4714,
+          "letter_ok_rate": 0.9857,
+          "mean_conf": 0.8273
+        },
+        "nli_noul": {
+          "task": "nli_noul",
+          "n": 50,
+          "accuracy": 0.48,
+          "letter_ok_rate": 0.0,
+          "mean_conf": 0.9808
+        },
+        "nli_score": {
+          "task": "nli_score",
+          "n": 80,
+          "accuracy": 0.375,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.8525
+        },
+        "routing": {
+          "task": "routing",
+          "n": 160,
+          "accuracy": 0.1625,
+          "letter_ok_rate": 0.9875,
+          "mean_conf": 0.7699
+        },
+        "tool_choice": {
+          "task": "tool_choice",
+          "n": 120,
+          "accuracy": 0.3083,
+          "letter_ok_rate": 0.5833,
+          "mean_conf": 0.7112
+        }
+      }
+    },
+    {
+      "model": "omnipilot16",
+      "macro_accuracy": 0.4932,
+      "letter_ok_rate": 1.0,
+      "per_task": {
+        "abstain": {
+          "task": "abstain",
+          "n": 60,
+          "accuracy": 1.0,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.8667
+        },
+        "emotion28": {
+          "task": "emotion28",
+          "n": 80,
+          "accuracy": 0.575,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.6608
+        },
+        "emotion6": {
+          "task": "emotion6",
+          "n": 120,
+          "accuracy": 0.3833,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.6856
+        },
+        "fact_evidence_noul": {
+          "task": "fact_evidence_noul",
+          "n": 65,
+          "accuracy": 0.2308,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.9812
+        },
+        "fact_vitaminc": {
+          "task": "fact_vitaminc",
+          "n": 55,
+          "accuracy": 0.6182,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.5498
+        },
+        "intent_clinc": {
+          "task": "intent_clinc",
+          "n": 100,
+          "accuracy": 0.7,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.8253
+        },
+        "intent_massive": {
+          "task": "intent_massive",
+          "n": 120,
+          "accuracy": 0.65,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.7824
+        },
+        "nli_mnli": {
+          "task": "nli_mnli",
+          "n": 70,
+          "accuracy": 0.1571,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.9621
+        },
+        "nli_noul": {
+          "task": "nli_noul",
+          "n": 50,
+          "accuracy": 0.24,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.9857
+        },
+        "nli_score": {
+          "task": "nli_score",
+          "n": 80,
+          "accuracy": 0.3625,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.8955
+        },
+        "routing": {
+          "task": "routing",
+          "n": 160,
+          "accuracy": 0.4437,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.7582
+        },
+        "tool_choice": {
+          "task": "tool_choice",
+          "n": 120,
+          "accuracy": 0.5583,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.6946
+        }
+      }
+    }
+  ]
+}

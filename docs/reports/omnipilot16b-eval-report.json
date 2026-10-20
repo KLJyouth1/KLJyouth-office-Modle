@@ -1,0 +1,3268 @@
+{
+  "eval_dir": "D:\\Downloads\\yolo-ultralytics\\omnipilot\\data\\datasets\\decision_eval",
+  "limit": null,
+  "results": [
+    {
+      "model": "qwen2.5-1.5b",
+      "macro_accuracy": 0.3822,
+      "macro_balanced": 0.3769,
+      "degenerate_tasks": [
+        "abstain",
+        "grounded"
+      ],
+      "letter_ok_rate": 0.7658,
+      "per_task": {
+        "abstain": {
+          "task": "abstain",
+          "n": 60,
+          "accuracy": 0.0,
+          "balanced_accuracy": 0.0,
+          "majority_baseline": 1.0,
+          "degenerate": true,
+          "letter_ok_rate": 0.0,
+          "mean_conf": 0.831,
+          "class_stats": {
+            "noul:False": [
+              0,
+              60
+            ]
+          },
+          "pred_stats": {
+            "true": 60
+          }
+        },
+        "emotion28": {
+          "task": "emotion28",
+          "n": 80,
+          "accuracy": 0.2875,
+          "balanced_accuracy": 0.3199,
+          "majority_baseline": 0.25,
+          "degenerate": false,
+          "letter_ok_rate": 0.9375,
+          "mean_conf": 0.7781,
+          "class_stats": {
+            "choice:disappointment": [
+              1,
+              4
+            ],
+            "choice:neutral": [
+              2,
+              20
+            ],
+            "choice:sadness": [
+              1,
+              4
+            ],
+            "choice:amusement": [
+              3,
+              4
+            ],
+            "choice:gratitude": [
+              5,
+              8
+            ],
+            "choice:anger": [
+              2,
+              3
+            ],
+            "choice:love": [
+              1,
+              4
+            ],
+            "choice:excitement": [
+              1,
+              3
+            ],
+            "choice:approval": [
+              1,
+              3
+            ],
+            "choice:fear": [
+              1,
+              4
+            ],
+            "choice:admiration": [
+              0,
+              4
+            ],
+            "choice:joy": [
+              2,
+              2
+            ],
+            "choice:surprise": [
+              1,
+              2
+            ],
+            "choice:annoyance": [
+              1,
+              5
+            ],
+            "choice:disapproval": [
+              0,
+              3
+            ],
+            "choice:optimism": [
+              0,
+              1
+            ],
+            "choice:curiosity": [
+              1,
+              4
+            ],
+            "choice:embarrassment": [
+              0,
+              2
+            ]
+          },
+          "pred_stats": {
+            "realization": 4,
+            "disappointment": 3,
+            "neutral": 6,
+            "curiosity": 2,
+            "embarrassment": 5,
+            "amusement": 8,
+            "pride": 1,
+            "anger": 5,
+            "approval": 3,
+            "caring": 3,
+            "desire": 2,
+            "gratitude": 5,
+            "disgust": 2,
+            "excitement": 2,
+            "disapproval": 6,
+            "optimism": 2,
+            "remorse": 1,
+            "joy": 3,
+            "surprise": 2,
+            "confusion": 2,
+            "relief": 1,
+            "annoyance": 3,
+            "grief": 3,
+            "love": 1,
+            "fear": 1,
+            "admiration": 1,
+            "nervousness": 1,
+            "sadness": 2
+          }
+        },
+        "emotion6": {
+          "task": "emotion6",
+          "n": 120,
+          "accuracy": 0.375,
+          "balanced_accuracy": 0.3347,
+          "majority_baseline": 0.3,
+          "degenerate": false,
+          "letter_ok_rate": 0.85,
+          "mean_conf": 0.8223,
+          "class_stats": {
+            "choice:fear": [
+              5,
+              19
+            ],
+            "choice:joy": [
+              4,
+              36
+            ],
+            "choice:anger": [
+              10,
+              19
+            ],
+            "choice:surprise": [
+              2,
+              6
+            ],
+            "choice:sadness": [
+              24,
+              31
+            ],
+            "choice:love": [
+              0,
+              9
+            ]
+          },
+          "pred_stats": {
+            "joy": 17,
+            "fear": 13,
+            "sadness": 51,
+            "anger": 15,
+            "love": 19,
+            "surprise": 5
+          }
+        },
+        "fact_evidence_noul": {
+          "task": "fact_evidence_noul",
+          "n": 63,
+          "accuracy": 0.4921,
+          "balanced_accuracy": 0.5218,
+          "majority_baseline": 0.5873,
+          "degenerate": false,
+          "letter_ok_rate": 0.0,
+          "mean_conf": 0.6596,
+          "class_stats": {
+            "noul:False": [
+              18,
+              26
+            ],
+            "noul:True": [
+              13,
+              37
+            ]
+          },
+          "pred_stats": {
+            "false": 42,
+            "true": 21
+          }
+        },
+        "fact_vitaminc": {
+          "task": "fact_vitaminc",
+          "n": 57,
+          "accuracy": 0.3158,
+          "balanced_accuracy": 0.3274,
+          "majority_baseline": 0.4035,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.8026,
+          "class_stats": {
+            "choice:NOT ENOUGH INFO": [
+              11,
+              17
+            ],
+            "choice:SUPPORTS": [
+              5,
+              23
+            ],
+            "choice:REFUTES": [
+              2,
+              17
+            ]
+          },
+          "pred_stats": {
+            "NOT ENOUGH INFO": 33,
+            "SUPPORTS": 15,
+            "REFUTES": 9
+          }
+        },
+        "grounded": {
+          "task": "grounded",
+          "n": 60,
+          "accuracy": 1.0,
+          "balanced_accuracy": 1.0,
+          "majority_baseline": 1.0,
+          "degenerate": true,
+          "letter_ok_rate": 0.0,
+          "mean_conf": 0.9237,
+          "class_stats": {
+            "noul:True": [
+              60,
+              60
+            ]
+          },
+          "pred_stats": {
+            "true": 60
+          }
+        },
+        "intent_clinc": {
+          "task": "intent_clinc",
+          "n": 100,
+          "accuracy": 0.42,
+          "balanced_accuracy": 0.4014,
+          "majority_baseline": 0.05,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.8328,
+          "class_stats": {
+            "choice:sync_device": [
+              0,
+              2
+            ],
+            "choice:pto_used": [
+              2,
+              3
+            ],
+            "choice:who_do_you_work_for": [
+              2,
+              3
+            ],
+            "choice:what_can_i_ask_you": [
+              0,
+              1
+            ],
+            "choice:change_ai_name": [
+              1,
+              2
+            ],
+            "choice:pto_request": [
+              1,
+              1
+            ],
+            "choice:order_status": [
+              1,
+              1
+            ],
+            "choice:gas": [
+              0,
+              1
+            ],
+            "choice:credit_limit_change": [
+              0,
+              1
+            ],
+            "choice:oil_change_when": [
+              3,
+              5
+            ],
+            "choice:greeting": [
+              1,
+              2
+            ],
+            "choice:what_is_your_name": [
+              0,
+              1
+            ],
+            "choice:book_flight": [
+              1,
+              1
+            ],
+            "choice:next_song": [
+              1,
+              1
+            ],
+            "choice:spelling": [
+              0,
+              1
+            ],
+            "choice:expiration_date": [
+              0,
+              1
+            ],
+            "choice:meaning_of_life": [
+              0,
+              1
+            ],
+            "choice:how_busy": [
+              0,
+              1
+            ],
+            "choice:who_made_you": [
+              1,
+              2
+            ],
+            "choice:do_you_have_pets": [
+              0,
+              1
+            ],
+            "choice:oos": [
+              1,
+              2
+            ],
+            "choice:calculator": [
+              1,
+              1
+            ],
+            "choice:jump_start": [
+              0,
+              2
+            ],
+            "choice:change_user_name": [
+              0,
+              1
+            ],
+            "choice:recipe": [
+              0,
+              2
+            ],
+            "choice:mpg": [
+              1,
+              1
+            ],
+            "choice:interest_rate": [
+              2,
+              3
+            ],
+            "choice:date": [
+              2,
+              2
+            ],
+            "choice:w2": [
+              0,
+              1
+            ],
+            "choice:cancel": [
+              0,
+              2
+            ],
+            "choice:cancel_reservation": [
+              0,
+              2
+            ],
+            "choice:taxes": [
+              0,
+              1
+            ],
+            "choice:card_declined": [
+              1,
+              2
+            ],
+            "choice:cook_time": [
+              1,
+              1
+            ],
+            "choice:income": [
+              0,
+              3
+            ],
+            "choice:book_hotel": [
+              1,
+              1
+            ],
+            "choice:apr": [
+              0,
+              1
+            ],
+            "choice:timer": [
+              1,
+              1
+            ],
+            "choice:text": [
+              0,
+              1
+            ],
+            "choice:weather": [
+              3,
+              3
+            ],
+            "choice:todo_list_update": [
+              0,
+              1
+            ],
+            "choice:how_old_are_you": [
+              1,
+              1
+            ],
+            "choice:schedule_maintenance": [
+              1,
+              2
+            ],
+            "choice:insurance": [
+              0,
+              2
+            ],
+            "choice:account_blocked": [
+              1,
+              1
+            ],
+            "choice:calendar_update": [
+              0,
+              1
+            ],
+            "choice:rollover_401k": [
+              1,
+              1
+            ],
+            "choice:transactions": [
+              0,
+              1
+            ],
+            "choice:shopping_list_update": [
+              0,
+              2
+            ],
+            "choice:pto_request_status": [
+              1,
+              1
+            ],
+            "choice:pay_bill": [
+              1,
+              2
+            ],
+            "choice:meeting_schedule": [
+              0,
+              1
+            ],
+            "choice:report_lost_card": [
+              0,
+              1
+            ],
+            "choice:bill_due": [
+              1,
+              1
+            ],
+            "choice:user_name": [
+              0,
+              1
+            ],
+            "choice:application_status": [
+              0,
+              1
+            ],
+            "choice:routing": [
+              0,
+              1
+            ],
+            "choice:order_checks": [
+              0,
+              1
+            ],
+            "choice:travel_alert": [
+              1,
+              1
+            ],
+            "choice:tire_pressure": [
+              1,
+              1
+            ],
+            "choice:are_you_a_bot": [
+              1,
+              1
+            ],
+            "choice:time": [
+              2,
+              2
+            ],
+            "choice:last_maintenance": [
+              0,
+              1
+            ],
+            "choice:rewards_balance": [
+              0,
+              1
+            ],
+            "choice:shopping_list": [
+              0,
+              1
+            ],
+            "choice:credit_score": [
+              1,
+              1
+            ],
+            "choice:car_rental": [
+              0,
+              1
+            ],
+            "choice:plug_type": [
+              0,
+              1
+            ],
+            "choice:change_language": [
+              0,
+              1
+            ],
+            "choice:ingredients_list": [
+              1,
+              1
+            ]
+          },
+          "pred_stats": {
+            "timezone": 1,
+            "pto_used": 2,
+            "who_do_you_work_for": 2,
+            "cook_time": 3,
+            "change_ai_name": 2,
+            "pto_request": 5,
+            "order_status": 1,
+            "change_language": 1,
+            "order": 1,
+            "oil_change_when": 3,
+            "greeting": 1,
+            "where_are_you_from": 3,
+            "book_flight": 2,
+            "next_song": 1,
+            "account_blocked": 2,
+            "fun_fact": 1,
+            "next_holiday": 2,
+            "distance": 1,
+            "who_made_you": 2,
+            "oos": 3,
+            "calculator": 1,
+            "freeze_account": 2,
+            "mpg": 2,
+            "interest_rate": 2,
+            "date": 2,
+            "schedule_maintenance": 2,
+            "what_can_i_ask_you": 1,
+            "change_volume": 1,
+            "travel_suggestion": 1,
+            "calendar": 2,
+            "restaurant_suggestion": 1,
+            "card_declined": 2,
+            "book_hotel": 1,
+            "improve_credit_score": 1,
+            "timer": 1,
+            "how_busy": 1,
+            "carry_on": 1,
+            "weather": 4,
+            "how_old_are_you": 1,
+            "sync_device": 2,
+            "todo_list": 1,
+            "alarm": 1,
+            "travel_alert": 2,
+            "rollover_401k": 1,
+            "international_fees": 1,
+            "new_card": 1,
+            "pto_request_status": 1,
+            "pay_bill": 1,
+            "accept_reservations": 2,
+            "credit_limit": 1,
+            "no": 1,
+            "bill_due": 1,
+            "flight_status": 1,
+            "recipe": 1,
+            "expiration_date": 1,
+            "cancel_reservation": 1,
+            "tire_pressure": 2,
+            "tell_joke": 1,
+            "are_you_a_bot": 1,
+            "time": 2,
+            "reminder": 1,
+            "exchange_rate": 1,
+            "credit_score": 1,
+            "food_last": 1,
+            "order_checks": 1,
+            "ingredients_list": 1
+          }
+        },
+        "intent_massive": {
+          "task": "intent_massive",
+          "n": 120,
+          "accuracy": 0.2917,
+          "balanced_accuracy": 0.2622,
+          "majority_baseline": 0.075,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.7535,
+          "class_stats": {
+            "choice:recommendation_locations": [
+              1,
+              4
+            ],
+            "choice:general_quirky": [
+              2,
+              4
+            ],
+            "choice:lists_createoradd": [
+              0,
+              2
+            ],
+            "choice:calendar_remove": [
+              1,
+              5
+            ],
+            "choice:calendar_set": [
+              3,
+              9
+            ],
+            "choice:email_query": [
+              0,
+              4
+            ],
+            "choice:qa_definition": [
+              2,
+              2
+            ],
+            "choice:news_query": [
+              3,
+              9
+            ],
+            "choice:audio_volume_mute": [
+              1,
+              2
+            ],
+            "choice:qa_factoid": [
+              1,
+              7
+            ],
+            "choice:social_query": [
+              2,
+              3
+            ],
+            "choice:play_music": [
+              3,
+              8
+            ],
+            "choice:datetime_query": [
+              1,
+              4
+            ],
+            "choice:play_radio": [
+              1,
+              4
+            ],
+            "choice:play_podcasts": [
+              0,
+              4
+            ],
+            "choice:qa_maths": [
+              0,
+              1
+            ],
+            "choice:iot_hue_lightdim": [
+              0,
+              1
+            ],
+            "choice:play_game": [
+              1,
+              2
+            ],
+            "choice:play_audiobook": [
+              1,
+              2
+            ],
+            "choice:datetime_convert": [
+              0,
+              2
+            ],
+            "choice:transport_taxi": [
+              3,
+              3
+            ],
+            "choice:audio_volume_up": [
+              1,
+              2
+            ],
+            "choice:email_addcontact": [
+              0,
+              1
+            ],
+            "choice:alarm_remove": [
+              1,
+              1
+            ],
+            "choice:calendar_query": [
+              2,
+              8
+            ],
+            "choice:qa_stock": [
+              1,
+              4
+            ],
+            "choice:iot_hue_lightoff": [
+              0,
+              2
+            ],
+            "choice:transport_traffic": [
+              0,
+              1
+            ],
+            "choice:transport_query": [
+              1,
+              1
+            ],
+            "choice:takeaway_order": [
+              1,
+              2
+            ],
+            "choice:music_likeness": [
+              0,
+              1
+            ],
+            "choice:weather_query": [
+              1,
+              2
+            ],
+            "choice:cooking_recipe": [
+              1,
+              1
+            ],
+            "choice:email_querycontact": [
+              0,
+              1
+            ],
+            "choice:alarm_set": [
+              0,
+              1
+            ],
+            "choice:music_query": [
+              0,
+              1
+            ],
+            "choice:iot_hue_lighton": [
+              0,
+              1
+            ],
+            "choice:social_post": [
+              0,
+              1
+            ],
+            "choice:transport_ticket": [
+              0,
+              1
+            ],
+            "choice:qa_currency": [
+              0,
+              1
+            ],
+            "choice:lists_remove": [
+              0,
+              1
+            ],
+            "choice:email_sendemail": [
+              0,
+              1
+            ],
+            "choice:iot_hue_lightup": [
+              0,
+              1
+            ],
+            "choice:music_settings": [
+              0,
+              1
+            ],
+            "choice:audio_volume_down": [
+              0,
+              1
+            ]
+          },
+          "pred_stats": {
+            "general_quirky": 4,
+            "qa_definition": 4,
+            "lists_query": 3,
+            "social_post": 4,
+            "calendar_set": 7,
+            "cooking_recipe": 2,
+            "recommendation_locations": 2,
+            "email_addcontact": 1,
+            "audio_volume_mute": 1,
+            "iot_hue_lightup": 1,
+            "play_music": 7,
+            "transport_traffic": 1,
+            "news_query": 6,
+            "transport_ticket": 2,
+            "play_podcasts": 1,
+            "calendar_query": 4,
+            "datetime_query": 5,
+            "qa_factoid": 2,
+            "music_dislikeness": 2,
+            "audio_volume_down": 4,
+            "transport_query": 4,
+            "social_query": 8,
+            "transport_taxi": 3,
+            "music_likeness": 1,
+            "lists_createoradd": 2,
+            "audio_volume_up": 3,
+            "iot_hue_lightdim": 3,
+            "lists_remove": 2,
+            "alarm_remove": 2,
+            "play_audiobook": 2,
+            "iot_wemo_off": 3,
+            "play_game": 2,
+            "calendar_remove": 1,
+            "iot_hue_lighton": 2,
+            "email_query": 2,
+            "email_querycontact": 1,
+            "takeaway_order": 1,
+            "general_joke": 2,
+            "weather_query": 1,
+            "qa_stock": 1,
+            "general_greet": 1,
+            "takeaway_query": 1,
+            "music_settings": 1,
+            "alarm_query": 2,
+            "play_radio": 2,
+            "iot_hue_lightchange": 2,
+            "email_sendemail": 1,
+            "recommendation_movies": 1
+          }
+        },
+        "nli_mnli": {
+          "task": "nli_mnli",
+          "n": 70,
+          "accuracy": 0.3143,
+          "balanced_accuracy": 0.2965,
+          "majority_baseline": 0.3714,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.937,
+          "class_stats": {
+            "choice:contradiction": [
+              5,
+              23
+            ],
+            "choice:entailment": [
+              2,
+              21
+            ],
+            "choice:neutral": [
+              15,
+              26
+            ]
+          },
+          "pred_stats": {
+            "entailment": 22,
+            "neutral": 42,
+            "contradiction": 6
+          }
+        },
+        "nli_noul": {
+          "task": "nli_noul",
+          "n": 50,
+          "accuracy": 0.76,
+          "balanced_accuracy": 0.7746,
+          "majority_baseline": 0.54,
+          "degenerate": false,
+          "letter_ok_rate": 0.16,
+          "mean_conf": 0.8469,
+          "class_stats": {
+            "noul:True": [
+              16,
+              27
+            ],
+            "noul:False": [
+              22,
+              23
+            ]
+          },
+          "pred_stats": {
+            "true": 17,
+            "false": 33
+          }
+        },
+        "nli_score": {
+          "task": "nli_score",
+          "n": 80,
+          "accuracy": 0.3375,
+          "balanced_accuracy": 0.3367,
+          "majority_baseline": 0.3375,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.7632,
+          "class_stats": {
+            "score:1": [
+              7,
+              26
+            ],
+            "score:0": [
+              20,
+              27
+            ],
+            "score:2": [
+              0,
+              27
+            ]
+          },
+          "pred_stats": {
+            "0": 51,
+            "1": 27,
+            "2": 2
+          }
+        },
+        "routing": {
+          "task": "routing",
+          "n": 160,
+          "accuracy": 0.175,
+          "balanced_accuracy": 0.0846,
+          "majority_baseline": 0.4062,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.8678,
+          "class_stats": {
+            "choice:code": [
+              6,
+              65
+            ],
+            "choice:browser": [
+              22,
+              53
+            ],
+            "choice:office": [
+              0,
+              32
+            ],
+            "choice:system": [
+              0,
+              6
+            ],
+            "choice:blender": [
+              0,
+              1
+            ],
+            "choice:media": [
+              0,
+              3
+            ]
+          },
+          "pred_stats": {
+            "blender": 4,
+            "office": 72,
+            "media": 12,
+            "code": 40,
+            "browser": 32
+          }
+        },
+        "tool_choice": {
+          "task": "tool_choice",
+          "n": 120,
+          "accuracy": 0.2,
+          "balanced_accuracy": 0.2397,
+          "majority_baseline": 0.2667,
+          "degenerate": false,
+          "letter_ok_rate": 0.8417,
+          "mean_conf": 0.8648,
+          "class_stats": {
+            "choice:web_fetch": [
+              0,
+              8
+            ],
+            "choice:file_write": [
+              0,
+              32
+            ],
+            "choice:code_python": [
+              5,
+              21
+            ],
+            "choice:browser_goto": [
+              2,
+              4
+            ],
+            "choice:web_search": [
+              10,
+              11
+            ],
+            "choice:browser_text": [
+              0,
+              6
+            ],
+            "choice:excel_read": [
+              4,
+              6
+            ],
+            "choice:blender_run_script": [
+              0,
+              1
+            ],
+            "choice:browser_click_text": [
+              0,
+              3
+            ],
+            "choice:excel_write": [
+              0,
+              9
+            ],
+            "choice:ppt_create": [
+              0,
+              3
+            ],
+            "choice:browser_press": [
+              0,
+              2
+            ],
+            "choice:sys_type": [
+              0,
+              3
+            ],
+            "choice:word_create": [
+              0,
+              2
+            ],
+            "choice:browser_fill": [
+              0,
+              2
+            ],
+            "choice:sys_click": [
+              0,
+              4
+            ],
+            "choice:word_read": [
+              2,
+              2
+            ],
+            "choice:browser_scroll": [
+              1,
+              1
+            ]
+          },
+          "pred_stats": {
+            "web_search": 17,
+            "code_python": 6,
+            "code_run": 21,
+            "browser_url": 4,
+            "excel_write": 2,
+            "blender_render": 1,
+            "file_write": 10,
+            "browser_goto": 13,
+            "excel_read": 13,
+            "word_create": 3,
+            "file_read": 16,
+            "sys_move": 7,
+            "browser_wait_for": 2,
+            "word_read": 4,
+            "browser_scroll": 1
+          }
+        }
+      }
+    },
+    {
+      "model": "omnipilot16",
+      "macro_accuracy": 0.5114,
+      "macro_balanced": 0.484,
+      "degenerate_tasks": [],
+      "letter_ok_rate": 1.0,
+      "per_task": {
+        "abstain": {
+          "task": "abstain",
+          "n": 60,
+          "accuracy": 0.9,
+          "balanced_accuracy": 0.9,
+          "majority_baseline": 1.0,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.6491,
+          "class_stats": {
+            "noul:False": [
+              54,
+              60
+            ]
+          },
+          "pred_stats": {
+            "false": 54,
+            "true": 6
+          }
+        },
+        "emotion28": {
+          "task": "emotion28",
+          "n": 80,
+          "accuracy": 0.575,
+          "balanced_accuracy": 0.4815,
+          "majority_baseline": 0.25,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.6608,
+          "class_stats": {
+            "choice:disappointment": [
+              0,
+              4
+            ],
+            "choice:neutral": [
+              17,
+              20
+            ],
+            "choice:sadness": [
+              1,
+              4
+            ],
+            "choice:amusement": [
+              3,
+              4
+            ],
+            "choice:gratitude": [
+              6,
+              8
+            ],
+            "choice:anger": [
+              2,
+              3
+            ],
+            "choice:love": [
+              3,
+              4
+            ],
+            "choice:excitement": [
+              3,
+              3
+            ],
+            "choice:approval": [
+              2,
+              3
+            ],
+            "choice:fear": [
+              2,
+              4
+            ],
+            "choice:admiration": [
+              1,
+              4
+            ],
+            "choice:joy": [
+              1,
+              2
+            ],
+            "choice:surprise": [
+              1,
+              2
+            ],
+            "choice:annoyance": [
+              2,
+              5
+            ],
+            "choice:disapproval": [
+              1,
+              3
+            ],
+            "choice:optimism": [
+              0,
+              1
+            ],
+            "choice:curiosity": [
+              0,
+              4
+            ],
+            "choice:embarrassment": [
+              1,
+              2
+            ]
+          },
+          "pred_stats": {
+            "neutral": 27,
+            "anger": 6,
+            "curiosity": 1,
+            "surprise": 2,
+            "amusement": 4,
+            "approval": 5,
+            "excitement": 3,
+            "caring": 2,
+            "gratitude": 6,
+            "sadness": 2,
+            "optimism": 1,
+            "admiration": 1,
+            "joy": 2,
+            "nervousness": 1,
+            "relief": 1,
+            "disapproval": 5,
+            "annoyance": 3,
+            "desire": 1,
+            "love": 3,
+            "realization": 1,
+            "fear": 2,
+            "embarrassment": 1
+          }
+        },
+        "emotion6": {
+          "task": "emotion6",
+          "n": 120,
+          "accuracy": 0.3833,
+          "balanced_accuracy": 0.3736,
+          "majority_baseline": 0.3,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.6856,
+          "class_stats": {
+            "choice:fear": [
+              0,
+              19
+            ],
+            "choice:joy": [
+              10,
+              36
+            ],
+            "choice:anger": [
+              8,
+              19
+            ],
+            "choice:surprise": [
+              3,
+              6
+            ],
+            "choice:sadness": [
+              22,
+              31
+            ],
+            "choice:love": [
+              3,
+              9
+            ]
+          },
+          "pred_stats": {
+            "sadness": 69,
+            "anger": 11,
+            "joy": 25,
+            "surprise": 6,
+            "love": 9
+          }
+        },
+        "fact_evidence_noul": {
+          "task": "fact_evidence_noul",
+          "n": 63,
+          "accuracy": 0.5397,
+          "balanced_accuracy": 0.5738,
+          "majority_baseline": 0.5873,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.9351,
+          "class_stats": {
+            "noul:False": [
+              20,
+              26
+            ],
+            "noul:True": [
+              14,
+              37
+            ]
+          },
+          "pred_stats": {
+            "false": 43,
+            "true": 20
+          }
+        },
+        "fact_vitaminc": {
+          "task": "fact_vitaminc",
+          "n": 57,
+          "accuracy": 0.4386,
+          "balanced_accuracy": 0.4237,
+          "majority_baseline": 0.4035,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.552,
+          "class_stats": {
+            "choice:NOT ENOUGH INFO": [
+              0,
+              17
+            ],
+            "choice:SUPPORTS": [
+              13,
+              23
+            ],
+            "choice:REFUTES": [
+              12,
+              17
+            ]
+          },
+          "pred_stats": {
+            "SUPPORTS": 26,
+            "REFUTES": 31
+          }
+        },
+        "grounded": {
+          "task": "grounded",
+          "n": 60,
+          "accuracy": 0.7,
+          "balanced_accuracy": 0.7,
+          "majority_baseline": 1.0,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.8846,
+          "class_stats": {
+            "noul:True": [
+              42,
+              60
+            ]
+          },
+          "pred_stats": {
+            "true": 42,
+            "false": 18
+          }
+        },
+        "intent_clinc": {
+          "task": "intent_clinc",
+          "n": 100,
+          "accuracy": 0.7,
+          "balanced_accuracy": 0.6848,
+          "majority_baseline": 0.05,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.8253,
+          "class_stats": {
+            "choice:sync_device": [
+              2,
+              2
+            ],
+            "choice:pto_used": [
+              3,
+              3
+            ],
+            "choice:who_do_you_work_for": [
+              3,
+              3
+            ],
+            "choice:what_can_i_ask_you": [
+              1,
+              1
+            ],
+            "choice:change_ai_name": [
+              2,
+              2
+            ],
+            "choice:pto_request": [
+              1,
+              1
+            ],
+            "choice:order_status": [
+              1,
+              1
+            ],
+            "choice:gas": [
+              0,
+              1
+            ],
+            "choice:credit_limit_change": [
+              0,
+              1
+            ],
+            "choice:oil_change_when": [
+              3,
+              5
+            ],
+            "choice:greeting": [
+              2,
+              2
+            ],
+            "choice:what_is_your_name": [
+              1,
+              1
+            ],
+            "choice:book_flight": [
+              1,
+              1
+            ],
+            "choice:next_song": [
+              1,
+              1
+            ],
+            "choice:spelling": [
+              0,
+              1
+            ],
+            "choice:expiration_date": [
+              0,
+              1
+            ],
+            "choice:meaning_of_life": [
+              0,
+              1
+            ],
+            "choice:how_busy": [
+              0,
+              1
+            ],
+            "choice:who_made_you": [
+              2,
+              2
+            ],
+            "choice:do_you_have_pets": [
+              0,
+              1
+            ],
+            "choice:oos": [
+              2,
+              2
+            ],
+            "choice:calculator": [
+              1,
+              1
+            ],
+            "choice:jump_start": [
+              2,
+              2
+            ],
+            "choice:change_user_name": [
+              0,
+              1
+            ],
+            "choice:recipe": [
+              1,
+              2
+            ],
+            "choice:mpg": [
+              1,
+              1
+            ],
+            "choice:interest_rate": [
+              3,
+              3
+            ],
+            "choice:date": [
+              2,
+              2
+            ],
+            "choice:w2": [
+              1,
+              1
+            ],
+            "choice:cancel": [
+              2,
+              2
+            ],
+            "choice:cancel_reservation": [
+              0,
+              2
+            ],
+            "choice:taxes": [
+              1,
+              1
+            ],
+            "choice:card_declined": [
+              0,
+              2
+            ],
+            "choice:cook_time": [
+              1,
+              1
+            ],
+            "choice:income": [
+              2,
+              3
+            ],
+            "choice:book_hotel": [
+              1,
+              1
+            ],
+            "choice:apr": [
+              1,
+              1
+            ],
+            "choice:timer": [
+              1,
+              1
+            ],
+            "choice:text": [
+              1,
+              1
+            ],
+            "choice:weather": [
+              2,
+              3
+            ],
+            "choice:todo_list_update": [
+              1,
+              1
+            ],
+            "choice:how_old_are_you": [
+              1,
+              1
+            ],
+            "choice:schedule_maintenance": [
+              1,
+              2
+            ],
+            "choice:insurance": [
+              1,
+              2
+            ],
+            "choice:account_blocked": [
+              1,
+              1
+            ],
+            "choice:calendar_update": [
+              1,
+              1
+            ],
+            "choice:rollover_401k": [
+              1,
+              1
+            ],
+            "choice:transactions": [
+              1,
+              1
+            ],
+            "choice:shopping_list_update": [
+              2,
+              2
+            ],
+            "choice:pto_request_status": [
+              1,
+              1
+            ],
+            "choice:pay_bill": [
+              1,
+              2
+            ],
+            "choice:meeting_schedule": [
+              0,
+              1
+            ],
+            "choice:report_lost_card": [
+              1,
+              1
+            ],
+            "choice:bill_due": [
+              0,
+              1
+            ],
+            "choice:user_name": [
+              0,
+              1
+            ],
+            "choice:application_status": [
+              0,
+              1
+            ],
+            "choice:routing": [
+              1,
+              1
+            ],
+            "choice:order_checks": [
+              0,
+              1
+            ],
+            "choice:travel_alert": [
+              1,
+              1
+            ],
+            "choice:tire_pressure": [
+              1,
+              1
+            ],
+            "choice:are_you_a_bot": [
+              1,
+              1
+            ],
+            "choice:time": [
+              0,
+              2
+            ],
+            "choice:last_maintenance": [
+              0,
+              1
+            ],
+            "choice:rewards_balance": [
+              0,
+              1
+            ],
+            "choice:shopping_list": [
+              0,
+              1
+            ],
+            "choice:credit_score": [
+              1,
+              1
+            ],
+            "choice:car_rental": [
+              1,
+              1
+            ],
+            "choice:plug_type": [
+              1,
+              1
+            ],
+            "choice:change_language": [
+              1,
+              1
+            ],
+            "choice:ingredients_list": [
+              1,
+              1
+            ]
+          },
+          "pred_stats": {
+            "sync_device": 3,
+            "pto_used": 3,
+            "who_do_you_work_for": 3,
+            "what_can_i_ask_you": 1,
+            "change_ai_name": 2,
+            "pto_request": 2,
+            "order_status": 1,
+            "measurement_conversion": 1,
+            "order": 1,
+            "tire_change": 1,
+            "greeting": 2,
+            "what_is_your_name": 1,
+            "book_flight": 1,
+            "next_song": 1,
+            "definition": 1,
+            "fun_fact": 1,
+            "recipe": 3,
+            "distance": 1,
+            "who_made_you": 2,
+            "next_holiday": 1,
+            "oos": 2,
+            "calculator": 1,
+            "jump_start": 2,
+            "user_name": 1,
+            "oil_change_when": 3,
+            "mpg": 1,
+            "interest_rate": 3,
+            "date": 2,
+            "w2": 2,
+            "cancel": 2,
+            "schedule_meeting": 1,
+            "taxes": 1,
+            "maybe": 2,
+            "calendar": 1,
+            "cook_time": 1,
+            "timer": 2,
+            "international_fees": 1,
+            "book_hotel": 3,
+            "apr": 1,
+            "text": 2,
+            "weather": 2,
+            "todo_list_update": 1,
+            "how_old_are_you": 1,
+            "schedule_maintenance": 1,
+            "credit_limit_change": 1,
+            "todo_list": 1,
+            "account_blocked": 1,
+            "calendar_update": 1,
+            "rollover_401k": 1,
+            "income": 2,
+            "transactions": 1,
+            "reminder_update": 1,
+            "shopping_list_update": 2,
+            "insurance": 1,
+            "pto_request_status": 1,
+            "pay_bill": 1,
+            "credit_limit": 1,
+            "report_lost_card": 2,
+            "flight_status": 1,
+            "routing": 1,
+            "freeze_account": 1,
+            "travel_alert": 1,
+            "tire_pressure": 1,
+            "are_you_a_bot": 1,
+            "reminder": 1,
+            "credit_score": 1,
+            "car_rental": 1,
+            "plug_type": 1,
+            "change_language": 1,
+            "ingredients_list": 1
+          }
+        },
+        "intent_massive": {
+          "task": "intent_massive",
+          "n": 120,
+          "accuracy": 0.65,
+          "balanced_accuracy": 0.6554,
+          "majority_baseline": 0.075,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.7824,
+          "class_stats": {
+            "choice:recommendation_locations": [
+              4,
+              4
+            ],
+            "choice:general_quirky": [
+              3,
+              4
+            ],
+            "choice:lists_createoradd": [
+              0,
+              2
+            ],
+            "choice:calendar_remove": [
+              2,
+              5
+            ],
+            "choice:calendar_set": [
+              8,
+              9
+            ],
+            "choice:email_query": [
+              4,
+              4
+            ],
+            "choice:qa_definition": [
+              1,
+              2
+            ],
+            "choice:news_query": [
+              7,
+              9
+            ],
+            "choice:audio_volume_mute": [
+              1,
+              2
+            ],
+            "choice:qa_factoid": [
+              3,
+              7
+            ],
+            "choice:social_query": [
+              3,
+              3
+            ],
+            "choice:play_music": [
+              5,
+              8
+            ],
+            "choice:datetime_query": [
+              3,
+              4
+            ],
+            "choice:play_radio": [
+              1,
+              4
+            ],
+            "choice:play_podcasts": [
+              0,
+              4
+            ],
+            "choice:qa_maths": [
+              0,
+              1
+            ],
+            "choice:iot_hue_lightdim": [
+              0,
+              1
+            ],
+            "choice:play_game": [
+              2,
+              2
+            ],
+            "choice:play_audiobook": [
+              0,
+              2
+            ],
+            "choice:datetime_convert": [
+              1,
+              2
+            ],
+            "choice:transport_taxi": [
+              3,
+              3
+            ],
+            "choice:audio_volume_up": [
+              2,
+              2
+            ],
+            "choice:email_addcontact": [
+              0,
+              1
+            ],
+            "choice:alarm_remove": [
+              1,
+              1
+            ],
+            "choice:calendar_query": [
+              3,
+              8
+            ],
+            "choice:qa_stock": [
+              3,
+              4
+            ],
+            "choice:iot_hue_lightoff": [
+              2,
+              2
+            ],
+            "choice:transport_traffic": [
+              1,
+              1
+            ],
+            "choice:transport_query": [
+              1,
+              1
+            ],
+            "choice:takeaway_order": [
+              2,
+              2
+            ],
+            "choice:music_likeness": [
+              0,
+              1
+            ],
+            "choice:weather_query": [
+              2,
+              2
+            ],
+            "choice:cooking_recipe": [
+              1,
+              1
+            ],
+            "choice:email_querycontact": [
+              1,
+              1
+            ],
+            "choice:alarm_set": [
+              0,
+              1
+            ],
+            "choice:music_query": [
+              1,
+              1
+            ],
+            "choice:iot_hue_lighton": [
+              1,
+              1
+            ],
+            "choice:social_post": [
+              0,
+              1
+            ],
+            "choice:transport_ticket": [
+              1,
+              1
+            ],
+            "choice:qa_currency": [
+              1,
+              1
+            ],
+            "choice:lists_remove": [
+              0,
+              1
+            ],
+            "choice:email_sendemail": [
+              1,
+              1
+            ],
+            "choice:iot_hue_lightup": [
+              1,
+              1
+            ],
+            "choice:music_settings": [
+              1,
+              1
+            ],
+            "choice:audio_volume_down": [
+              1,
+              1
+            ]
+          },
+          "pred_stats": {
+            "recommendation_locations": 6,
+            "qa_definition": 3,
+            "qa_currency": 3,
+            "social_post": 3,
+            "calendar_set": 10,
+            "email_query": 4,
+            "news_query": 7,
+            "general_greet": 1,
+            "qa_factoid": 4,
+            "social_query": 6,
+            "general_quirky": 4,
+            "calendar_query": 5,
+            "play_podcasts": 1,
+            "datetime_query": 4,
+            "recommendation_events": 1,
+            "lists_query": 1,
+            "music_query": 2,
+            "play_game": 3,
+            "play_music": 8,
+            "transport_query": 4,
+            "transport_taxi": 4,
+            "play_radio": 1,
+            "audio_volume_up": 3,
+            "iot_hue_lightdim": 2,
+            "lists_remove": 1,
+            "alarm_remove": 1,
+            "calendar_remove": 3,
+            "iot_hue_lightoff": 2,
+            "transport_traffic": 1,
+            "audio_volume_mute": 3,
+            "email_querycontact": 2,
+            "qa_stock": 3,
+            "takeaway_order": 2,
+            "weather_query": 2,
+            "cooking_recipe": 1,
+            "alarm_set": 1,
+            "datetime_convert": 1,
+            "iot_hue_lighton": 1,
+            "transport_ticket": 1,
+            "iot_wemo_off": 1,
+            "email_sendemail": 1,
+            "iot_hue_lightup": 1,
+            "music_settings": 1,
+            "audio_volume_down": 1
+          }
+        },
+        "nli_mnli": {
+          "task": "nli_mnli",
+          "n": 70,
+          "accuracy": 0.1571,
+          "balanced_accuracy": 0.1566,
+          "majority_baseline": 0.3714,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.9621,
+          "class_stats": {
+            "choice:contradiction": [
+              2,
+              23
+            ],
+            "choice:entailment": [
+              4,
+              21
+            ],
+            "choice:neutral": [
+              5,
+              26
+            ]
+          },
+          "pred_stats": {
+            "entailment": 26,
+            "neutral": 25,
+            "contradiction": 19
+          }
+        },
+        "nli_noul": {
+          "task": "nli_noul",
+          "n": 50,
+          "accuracy": 0.24,
+          "balanced_accuracy": 0.2576,
+          "majority_baseline": 0.54,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.9857,
+          "class_stats": {
+            "noul:True": [
+              1,
+              27
+            ],
+            "noul:False": [
+              11,
+              23
+            ]
+          },
+          "pred_stats": {
+            "false": 37,
+            "true": 13
+          }
+        },
+        "nli_score": {
+          "task": "nli_score",
+          "n": 80,
+          "accuracy": 0.3625,
+          "balanced_accuracy": 0.3604,
+          "majority_baseline": 0.3375,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.8955,
+          "class_stats": {
+            "score:1": [
+              5,
+              26
+            ],
+            "score:0": [
+              22,
+              27
+            ],
+            "score:2": [
+              2,
+              27
+            ]
+          },
+          "pred_stats": {
+            "0": 55,
+            "1": 16,
+            "2": 9
+          }
+        },
+        "routing": {
+          "task": "routing",
+          "n": 160,
+          "accuracy": 0.4437,
+          "balanced_accuracy": 0.2932,
+          "majority_baseline": 0.4062,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.7582,
+          "class_stats": {
+            "choice:code": [
+              21,
+              65
+            ],
+            "choice:browser": [
+              43,
+              53
+            ],
+            "choice:office": [
+              4,
+              32
+            ],
+            "choice:system": [
+              3,
+              6
+            ],
+            "choice:blender": [
+              0,
+              1
+            ],
+            "choice:media": [
+              0,
+              3
+            ]
+          },
+          "pred_stats": {
+            "browser": 78,
+            "code": 55,
+            "office": 17,
+            "media": 6,
+            "system": 4
+          }
+        },
+        "tool_choice": {
+          "task": "tool_choice",
+          "n": 120,
+          "accuracy": 0.5583,
+          "balanced_accuracy": 0.4315,
+          "majority_baseline": 0.2667,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.6946,
+          "class_stats": {
+            "choice:web_fetch": [
+              2,
+              8
+            ],
+            "choice:file_write": [
+              32,
+              32
+            ],
+            "choice:code_python": [
+              8,
+              21
+            ],
+            "choice:browser_goto": [
+              3,
+              4
+            ],
+            "choice:web_search": [
+              7,
+              11
+            ],
+            "choice:browser_text": [
+              0,
+              6
+            ],
+            "choice:excel_read": [
+              0,
+              6
+            ],
+            "choice:blender_run_script": [
+              1,
+              1
+            ],
+            "choice:browser_click_text": [
+              3,
+              3
+            ],
+            "choice:excel_write": [
+              6,
+              9
+            ],
+            "choice:ppt_create": [
+              0,
+              3
+            ],
+            "choice:browser_press": [
+              0,
+              2
+            ],
+            "choice:sys_type": [
+              1,
+              3
+            ],
+            "choice:word_create": [
+              0,
+              2
+            ],
+            "choice:browser_fill": [
+              0,
+              2
+            ],
+            "choice:sys_click": [
+              3,
+              4
+            ],
+            "choice:word_read": [
+              0,
+              2
+            ],
+            "choice:browser_scroll": [
+              1,
+              1
+            ]
+          },
+          "pred_stats": {
+            "web_search": 17,
+            "file_write": 43,
+            "code_python": 8,
+            "browser_goto": 9,
+            "word_read": 3,
+            "blender_run_script": 1,
+            "browser_click_text": 3,
+            "excel_write": 14,
+            "web_fetch": 7,
+            "excel_read": 5,
+            "sys_click": 5,
+            "code_run": 2,
+            "sys_type": 2,
+            "browser_scroll": 1
+          }
+        }
+      }
+    },
+    {
+      "model": "omnipilot16b",
+      "macro_accuracy": 0.303,
+      "macro_balanced": 0.2818,
+      "degenerate_tasks": [],
+      "letter_ok_rate": 1.0,
+      "per_task": {
+        "abstain": {
+          "task": "abstain",
+          "n": 60,
+          "accuracy": 0.15,
+          "balanced_accuracy": 0.15,
+          "majority_baseline": 1.0,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.976,
+          "class_stats": {
+            "noul:False": [
+              9,
+              60
+            ]
+          },
+          "pred_stats": {
+            "true": 51,
+            "false": 9
+          }
+        },
+        "emotion28": {
+          "task": "emotion28",
+          "n": 80,
+          "accuracy": 0.5125,
+          "balanced_accuracy": 0.4796,
+          "majority_baseline": 0.25,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.6506,
+          "class_stats": {
+            "choice:disappointment": [
+              0,
+              4
+            ],
+            "choice:neutral": [
+              13,
+              20
+            ],
+            "choice:sadness": [
+              2,
+              4
+            ],
+            "choice:amusement": [
+              3,
+              4
+            ],
+            "choice:gratitude": [
+              4,
+              8
+            ],
+            "choice:anger": [
+              2,
+              3
+            ],
+            "choice:love": [
+              2,
+              4
+            ],
+            "choice:excitement": [
+              2,
+              3
+            ],
+            "choice:approval": [
+              2,
+              3
+            ],
+            "choice:fear": [
+              2,
+              4
+            ],
+            "choice:admiration": [
+              2,
+              4
+            ],
+            "choice:joy": [
+              1,
+              2
+            ],
+            "choice:surprise": [
+              2,
+              2
+            ],
+            "choice:annoyance": [
+              2,
+              5
+            ],
+            "choice:disapproval": [
+              1,
+              3
+            ],
+            "choice:optimism": [
+              0,
+              1
+            ],
+            "choice:curiosity": [
+              0,
+              4
+            ],
+            "choice:embarrassment": [
+              1,
+              2
+            ]
+          },
+          "pred_stats": {
+            "neutral": 21,
+            "anger": 5,
+            "surprise": 6,
+            "curiosity": 1,
+            "amusement": 6,
+            "gratitude": 4,
+            "approval": 6,
+            "excitement": 3,
+            "joy": 3,
+            "admiration": 3,
+            "disgust": 1,
+            "fear": 2,
+            "optimism": 1,
+            "nervousness": 1,
+            "annoyance": 5,
+            "love": 2,
+            "realization": 2,
+            "pride": 1,
+            "disapproval": 4,
+            "sadness": 2,
+            "embarrassment": 1
+          }
+        },
+        "emotion6": {
+          "task": "emotion6",
+          "n": 120,
+          "accuracy": 0.1917,
+          "balanced_accuracy": 0.1361,
+          "majority_baseline": 0.3,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.6053,
+          "class_stats": {
+            "choice:fear": [
+              1,
+              19
+            ],
+            "choice:joy": [
+              10,
+              36
+            ],
+            "choice:anger": [
+              1,
+              19
+            ],
+            "choice:surprise": [
+              0,
+              6
+            ],
+            "choice:sadness": [
+              10,
+              31
+            ],
+            "choice:love": [
+              1,
+              9
+            ]
+          },
+          "pred_stats": {
+            "surprise": 11,
+            "joy": 37,
+            "anger": 11,
+            "love": 15,
+            "sadness": 43,
+            "fear": 3
+          }
+        },
+        "fact_evidence_noul": {
+          "task": "fact_evidence_noul",
+          "n": 63,
+          "accuracy": 0.5873,
+          "balanced_accuracy": 0.6372,
+          "majority_baseline": 0.5873,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.7945,
+          "class_stats": {
+            "noul:False": [
+              24,
+              26
+            ],
+            "noul:True": [
+              13,
+              37
+            ]
+          },
+          "pred_stats": {
+            "false": 48,
+            "true": 15
+          }
+        },
+        "fact_vitaminc": {
+          "task": "fact_vitaminc",
+          "n": 57,
+          "accuracy": 0.4035,
+          "balanced_accuracy": 0.3743,
+          "majority_baseline": 0.4035,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.618,
+          "class_stats": {
+            "choice:NOT ENOUGH INFO": [
+              0,
+              17
+            ],
+            "choice:SUPPORTS": [
+              15,
+              23
+            ],
+            "choice:REFUTES": [
+              8,
+              17
+            ]
+          },
+          "pred_stats": {
+            "REFUTES": 24,
+            "NOT ENOUGH INFO": 4,
+            "SUPPORTS": 29
+          }
+        },
+        "grounded": {
+          "task": "grounded",
+          "n": 60,
+          "accuracy": 0.1,
+          "balanced_accuracy": 0.1,
+          "majority_baseline": 1.0,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.9499,
+          "class_stats": {
+            "noul:True": [
+              6,
+              60
+            ]
+          },
+          "pred_stats": {
+            "false": 54,
+            "true": 6
+          }
+        },
+        "intent_clinc": {
+          "task": "intent_clinc",
+          "n": 100,
+          "accuracy": 0.11,
+          "balanced_accuracy": 0.11,
+          "majority_baseline": 0.05,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.6157,
+          "class_stats": {
+            "choice:sync_device": [
+              0,
+              2
+            ],
+            "choice:pto_used": [
+              0,
+              3
+            ],
+            "choice:who_do_you_work_for": [
+              0,
+              3
+            ],
+            "choice:what_can_i_ask_you": [
+              0,
+              1
+            ],
+            "choice:change_ai_name": [
+              1,
+              2
+            ],
+            "choice:pto_request": [
+              0,
+              1
+            ],
+            "choice:order_status": [
+              0,
+              1
+            ],
+            "choice:gas": [
+              0,
+              1
+            ],
+            "choice:credit_limit_change": [
+              0,
+              1
+            ],
+            "choice:oil_change_when": [
+              1,
+              5
+            ],
+            "choice:greeting": [
+              0,
+              2
+            ],
+            "choice:what_is_your_name": [
+              1,
+              1
+            ],
+            "choice:book_flight": [
+              0,
+              1
+            ],
+            "choice:next_song": [
+              0,
+              1
+            ],
+            "choice:spelling": [
+              0,
+              1
+            ],
+            "choice:expiration_date": [
+              0,
+              1
+            ],
+            "choice:meaning_of_life": [
+              0,
+              1
+            ],
+            "choice:how_busy": [
+              0,
+              1
+            ],
+            "choice:who_made_you": [
+              0,
+              2
+            ],
+            "choice:do_you_have_pets": [
+              0,
+              1
+            ],
+            "choice:oos": [
+              0,
+              2
+            ],
+            "choice:calculator": [
+              0,
+              1
+            ],
+            "choice:jump_start": [
+              0,
+              2
+            ],
+            "choice:change_user_name": [
+              0,
+              1
+            ],
+            "choice:recipe": [
+              0,
+              2
+            ],
+            "choice:mpg": [
+              0,
+              1
+            ],
+            "choice:interest_rate": [
+              0,
+              3
+            ],
+            "choice:date": [
+              1,
+              2
+            ],
+            "choice:w2": [
+              0,
+              1
+            ],
+            "choice:cancel": [
+              1,
+              2
+            ],
+            "choice:cancel_reservation": [
+              0,
+              2
+            ],
+            "choice:taxes": [
+              0,
+              1
+            ],
+            "choice:card_declined": [
+              0,
+              2
+            ],
+            "choice:cook_time": [
+              0,
+              1
+            ],
+            "choice:income": [
+              0,
+              3
+            ],
+            "choice:book_hotel": [
+              1,
+              1
+            ],
+            "choice:apr": [
+              0,
+              1
+            ],
+            "choice:timer": [
+              0,
+              1
+            ],
+            "choice:text": [
+              0,
+              1
+            ],
+            "choice:weather": [
+              0,
+              3
+            ],
+            "choice:todo_list_update": [
+              0,
+              1
+            ],
+            "choice:how_old_are_you": [
+              1,
+              1
+            ],
+            "choice:schedule_maintenance": [
+              0,
+              2
+            ],
+            "choice:insurance": [
+              0,
+              2
+            ],
+            "choice:account_blocked": [
+              0,
+              1
+            ],
+            "choice:calendar_update": [
+              0,
+              1
+            ],
+            "choice:rollover_401k": [
+              0,
+              1
+            ],
+            "choice:transactions": [
+              0,
+              1
+            ],
+            "choice:shopping_list_update": [
+              1,
+              2
+            ],
+            "choice:pto_request_status": [
+              1,
+              1
+            ],
+            "choice:pay_bill": [
+              1,
+              2
+            ],
+            "choice:meeting_schedule": [
+              0,
+              1
+            ],
+            "choice:report_lost_card": [
+              0,
+              1
+            ],
+            "choice:bill_due": [
+              0,
+              1
+            ],
+            "choice:user_name": [
+              0,
+              1
+            ],
+            "choice:application_status": [
+              0,
+              1
+            ],
+            "choice:routing": [
+              0,
+              1
+            ],
+            "choice:order_checks": [
+              0,
+              1
+            ],
+            "choice:travel_alert": [
+              0,
+              1
+            ],
+            "choice:tire_pressure": [
+              0,
+              1
+            ],
+            "choice:are_you_a_bot": [
+              0,
+              1
+            ],
+            "choice:time": [
+              0,
+              2
+            ],
+            "choice:last_maintenance": [
+              0,
+              1
+            ],
+            "choice:rewards_balance": [
+              0,
+              1
+            ],
+            "choice:shopping_list": [
+              0,
+              1
+            ],
+            "choice:credit_score": [
+              0,
+              1
+            ],
+            "choice:car_rental": [
+              0,
+              1
+            ],
+            "choice:plug_type": [
+              1,
+              1
+            ],
+            "choice:change_language": [
+              0,
+              1
+            ],
+            "choice:ingredients_list": [
+              0,
+              1
+            ]
+          },
+          "pred_stats": {
+            "todo_list_update": 1,
+            "calendar": 2,
+            "traffic": 3,
+            "cook_time": 2,
+            "order_status": 1,
+            "do_you_have_pets": 1,
+            "make_call": 2,
+            "measurement_conversion": 2,
+            "order": 1,
+            "tire_change": 1,
+            "balance": 2,
+            "what_is_your_name": 2,
+            "new_card": 1,
+            "definition": 1,
+            "text": 3,
+            "account_blocked": 1,
+            "fun_fact": 1,
+            "recipe": 1,
+            "travel_suggestion": 1,
+            "who_do_you_work_for": 1,
+            "next_holiday": 1,
+            "flip_coin": 1,
+            "insurance_change": 1,
+            "user_name": 1,
+            "oil_change_when": 1,
+            "pto_request": 2,
+            "bill_due": 1,
+            "greeting": 1,
+            "ingredient_substitution": 1,
+            "cancel": 1,
+            "schedule_meeting": 1,
+            "change_volume": 2,
+            "maybe": 2,
+            "meal_suggestion": 2,
+            "restaurant_suggestion": 1,
+            "international_fees": 2,
+            "book_hotel": 2,
+            "pay_bill": 3,
+            "improve_credit_score": 1,
+            "how_busy": 1,
+            "repeat": 2,
+            "oos": 2,
+            "calendar_update": 1,
+            "date": 1,
+            "how_old_are_you": 1,
+            "car_rental": 1,
+            "credit_limit_change": 1,
+            "sync_device": 2,
+            "todo_list": 1,
+            "alarm": 1,
+            "routing": 1,
+            "payday": 1,
+            "pto_request_status": 1,
+            "accept_reservations": 2,
+            "credit_limit": 1,
+            "no": 1,
+            "report_lost_card": 1,
+            "flight_status": 1,
+            "play_music": 1,
+            "uber": 1,
+            "expiration_date": 1,
+            "freeze_account": 1,
+            "restaurant_reservation": 1,
+            "shopping_list": 1,
+            "meeting_schedule": 1,
+            "transfer": 1,
+            "shopping_list_update": 1,
+            "bill_balance": 2,
+            "reminder": 1,
+            "change_language": 1,
+            "change_ai_name": 1,
+            "w2": 1,
+            "what_can_i_ask_you": 1,
+            "yes": 1,
+            "food_last": 1,
+            "plug_type": 1,
+            "change_accent": 1
+          }
+        },
+        "intent_massive": {
+          "task": "intent_massive",
+          "n": 120,
+          "accuracy": 0.325,
+          "balanced_accuracy": 0.344,
+          "majority_baseline": 0.075,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.6692,
+          "class_stats": {
+            "choice:recommendation_locations": [
+              1,
+              4
+            ],
+            "choice:general_quirky": [
+              2,
+              4
+            ],
+            "choice:lists_createoradd": [
+              0,
+              2
+            ],
+            "choice:calendar_remove": [
+              2,
+              5
+            ],
+            "choice:calendar_set": [
+              4,
+              9
+            ],
+            "choice:email_query": [
+              1,
+              4
+            ],
+            "choice:qa_definition": [
+              0,
+              2
+            ],
+            "choice:news_query": [
+              3,
+              9
+            ],
+            "choice:audio_volume_mute": [
+              1,
+              2
+            ],
+            "choice:qa_factoid": [
+              3,
+              7
+            ],
+            "choice:social_query": [
+              2,
+              3
+            ],
+            "choice:play_music": [
+              5,
+              8
+            ],
+            "choice:datetime_query": [
+              0,
+              4
+            ],
+            "choice:play_radio": [
+              0,
+              4
+            ],
+            "choice:play_podcasts": [
+              0,
+              4
+            ],
+            "choice:qa_maths": [
+              0,
+              1
+            ],
+            "choice:iot_hue_lightdim": [
+              0,
+              1
+            ],
+            "choice:play_game": [
+              2,
+              2
+            ],
+            "choice:play_audiobook": [
+              0,
+              2
+            ],
+            "choice:datetime_convert": [
+              0,
+              2
+            ],
+            "choice:transport_taxi": [
+              1,
+              3
+            ],
+            "choice:audio_volume_up": [
+              1,
+              2
+            ],
+            "choice:email_addcontact": [
+              0,
+              1
+            ],
+            "choice:alarm_remove": [
+              1,
+              1
+            ],
+            "choice:calendar_query": [
+              0,
+              8
+            ],
+            "choice:qa_stock": [
+              1,
+              4
+            ],
+            "choice:iot_hue_lightoff": [
+              0,
+              2
+            ],
+            "choice:transport_traffic": [
+              1,
+              1
+            ],
+            "choice:transport_query": [
+              1,
+              1
+            ],
+            "choice:takeaway_order": [
+              1,
+              2
+            ],
+            "choice:music_likeness": [
+              0,
+              1
+            ],
+            "choice:weather_query": [
+              1,
+              2
+            ],
+            "choice:cooking_recipe": [
+              1,
+              1
+            ],
+            "choice:email_querycontact": [
+              1,
+              1
+            ],
+            "choice:alarm_set": [
+              0,
+              1
+            ],
+            "choice:music_query": [
+              0,
+              1
+            ],
+            "choice:iot_hue_lighton": [
+              0,
+              1
+            ],
+            "choice:social_post": [
+              1,
+              1
+            ],
+            "choice:transport_ticket": [
+              1,
+              1
+            ],
+            "choice:qa_currency": [
+              0,
+              1
+            ],
+            "choice:lists_remove": [
+              0,
+              1
+            ],
+            "choice:email_sendemail": [
+              0,
+              1
+            ],
+            "choice:iot_hue_lightup": [
+              0,
+              1
+            ],
+            "choice:music_settings": [
+              1,
+              1
+            ],
+            "choice:audio_volume_down": [
+              0,
+              1
+            ]
+          },
+          "pred_stats": {
+            "general_quirky": 4,
+            "qa_factoid": 6,
+            "lists_query": 2,
+            "iot_hue_lightdim": 4,
+            "lists_createoradd": 3,
+            "email_query": 1,
+            "iot_hue_lightoff": 1,
+            "recommendation_locations": 3,
+            "email_addcontact": 1,
+            "iot_cleaning": 2,
+            "iot_hue_lightup": 2,
+            "social_query": 6,
+            "calendar_remove": 5,
+            "news_query": 6,
+            "qa_currency": 1,
+            "calendar_set": 9,
+            "play_podcasts": 2,
+            "recommendation_movies": 2,
+            "iot_hue_lightchange": 1,
+            "recommendation_events": 2,
+            "music_dislikeness": 1,
+            "play_game": 4,
+            "play_radio": 2,
+            "play_music": 9,
+            "transport_taxi": 1,
+            "audio_volume_up": 2,
+            "lists_remove": 1,
+            "alarm_remove": 1,
+            "iot_wemo_off": 3,
+            "transport_traffic": 2,
+            "transport_query": 3,
+            "email_querycontact": 2,
+            "social_post": 3,
+            "qa_stock": 1,
+            "audio_volume_other": 3,
+            "alarm_query": 2,
+            "iot_wemo_on": 1,
+            "audio_volume_mute": 2,
+            "email_sendemail": 3,
+            "cooking_recipe": 1,
+            "weather_query": 1,
+            "alarm_set": 1,
+            "datetime_convert": 2,
+            "takeaway_order": 1,
+            "audio_volume_down": 1,
+            "transport_ticket": 1,
+            "datetime_query": 1,
+            "music_settings": 1,
+            "qa_definition": 1
+          }
+        },
+        "nli_mnli": {
+          "task": "nli_mnli",
+          "n": 70,
+          "accuracy": 0.0571,
+          "balanced_accuracy": 0.056,
+          "majority_baseline": 0.3714,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.9342,
+          "class_stats": {
+            "choice:contradiction": [
+              1,
+              23
+            ],
+            "choice:entailment": [
+              1,
+              21
+            ],
+            "choice:neutral": [
+              2,
+              26
+            ]
+          },
+          "pred_stats": {
+            "entailment": 24,
+            "contradiction": 33,
+            "neutral": 13
+          }
+        },
+        "nli_noul": {
+          "task": "nli_noul",
+          "n": 50,
+          "accuracy": 0.7,
+          "balanced_accuracy": 0.6804,
+          "majority_baseline": 0.54,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.8016,
+          "class_stats": {
+            "noul:True": [
+              25,
+              27
+            ],
+            "noul:False": [
+              10,
+              23
+            ]
+          },
+          "pred_stats": {
+            "true": 38,
+            "false": 12
+          }
+        },
+        "nli_score": {
+          "task": "nli_score",
+          "n": 80,
+          "accuracy": 0.1375,
+          "balanced_accuracy": 0.1363,
+          "majority_baseline": 0.3375,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.9082,
+          "class_stats": {
+            "score:1": [
+              1,
+              26
+            ],
+            "score:0": [
+              9,
+              27
+            ],
+            "score:2": [
+              1,
+              27
+            ]
+          },
+          "pred_stats": {
+            "2": 11,
+            "0": 47,
+            "1": 22
+          }
+        },
+        "routing": {
+          "task": "routing",
+          "n": 160,
+          "accuracy": 0.2313,
+          "balanced_accuracy": 0.1164,
+          "majority_baseline": 0.4062,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.7501,
+          "class_stats": {
+            "choice:code": [
+              0,
+              65
+            ],
+            "choice:browser": [
+              37,
+              53
+            ],
+            "choice:office": [
+              0,
+              32
+            ],
+            "choice:system": [
+              0,
+              6
+            ],
+            "choice:blender": [
+              0,
+              1
+            ],
+            "choice:media": [
+              0,
+              3
+            ]
+          },
+          "pred_stats": {
+            "browser": 103,
+            "code": 25,
+            "office": 21,
+            "system": 9,
+            "media": 2
+          }
+        },
+        "tool_choice": {
+          "task": "tool_choice",
+          "n": 120,
+          "accuracy": 0.4333,
+          "balanced_accuracy": 0.3427,
+          "majority_baseline": 0.2667,
+          "degenerate": false,
+          "letter_ok_rate": 1.0,
+          "mean_conf": 0.6966,
+          "class_stats": {
+            "choice:web_fetch": [
+              0,
+              8
+            ],
+            "choice:file_write": [
+              22,
+              32
+            ],
+            "choice:code_python": [
+              5,
+              21
+            ],
+            "choice:browser_goto": [
+              0,
+              4
+            ],
+            "choice:web_search": [
+              10,
+              11
+            ],
+            "choice:browser_text": [
+              6,
+              6
+            ],
+            "choice:excel_read": [
+              0,
+              6
+            ],
+            "choice:blender_run_script": [
+              1,
+              1
+            ],
+            "choice:browser_click_text": [
+              3,
+              3
+            ],
+            "choice:excel_write": [
+              0,
+              9
+            ],
+            "choice:ppt_create": [
+              0,
+              3
+            ],
+            "choice:browser_press": [
+              0,
+              2
+            ],
+            "choice:sys_type": [
+              1,
+              3
+            ],
+            "choice:word_create": [
+              0,
+              2
+            ],
+            "choice:browser_fill": [
+              0,
+              2
+            ],
+            "choice:sys_click": [
+              4,
+              4
+            ],
+            "choice:word_read": [
+              0,
+              2
+            ],
+            "choice:browser_scroll": [
+              0,
+              1
+            ]
+          },
+          "pred_stats": {
+            "web_search": 22,
+            "file_write": 35,
+            "browser_text": 10,
+            "word_read": 3,
+            "blender_run_script": 1,
+            "code_python": 8,
+            "browser_click_text": 3,
+            "word_create": 11,
+            "excel_write": 6,
+            "sys_click": 6,
+            "file_read": 8,
+            "excel_read": 2,
+            "code_run": 2,
+            "sys_type": 1,
+            "browser_screenshot": 1,
+            "web_fetch": 1
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,370 @@
+{
+  "generated_at": "2026-10-17T23:14:11+08:00",
+  "subject": "Ollama KV cache 量化：吞吐 / 显存 / 决策质量三方权衡",
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 3050 Ti Laptop GPU (4GB)",
+    "runtime": "Ollama 0.15.2, flash attention on",
+    "throughput_model": "qwen2.5-1.5b（F16，3.09 GB GGUF，context 32768）",
+    "quality_model": "omnipilot16（Qwen2.5-1.5B + decision LoRA，Q4_K_M，0.99 GB）"
+  },
+  "caveats": [
+    "q4_0 的字母输出崩溃在本机（Ollama 0.15.2 / RTX 3050 Ti）稳定复现，但不代表所有推理实现；换运行时需重测",
+    "质量闸门只覆盖决策负载（单字母 logits）；长文生成质量未做人工评测，长上下文开 q8_0 前必须人工验收",
+    "吞吐用 F16 基座测（避免权重量化噪声干扰 KV 对比）；omnipilot16 为 Q4_K_M，绝对 tok/s 不同，但 KV 占用与带宽比例结论不变",
+    "基座权重本身已是 Q4_K_M 时，KV 量化误差会叠加在权重误差上，近分票更易翻盘；F16 权重下的损失预计更小，未单独验证"
+  ],
+  "methodology": {
+    "throughput": "num_predict=256（短）/128（长），temperature=0，预热使用不同前缀以避开 prompt cache",
+    "validity_guard": "eval_count >= 100，否则整条作废；omnipilot16 只输出单字母，不可用于吞吐测量",
+    "quality": "决策评测集 1060 条 / 13 任务，temperature=0，letter-logit 口径；macro 均衡准确率判定"
+  },
+  "short_context": [
+    {
+      "model": "qwen2.5-1.5b",
+      "num_ctx": 4096,
+      "kv_type": "f16",
+      "run_tag": "f16-FA-ctx4096-r1",
+      "prompt_tok": 209,
+      "decode_tok_s_mean": 26.41,
+      "prefill_tok_s_mean": 5430.8,
+      "ttft_ms_mean": 151.8,
+      "gpu_used_mb": null,
+      "reported_size_gib": 3.456,
+      "reported_vram_gib": 2.657,
+      "samples": 2
+    },
+    {
+      "model": "qwen2.5-1.5b",
+      "num_ctx": 8192,
+      "kv_type": "f16",
+      "run_tag": "f16-FA-ctx8192-r1",
+      "prompt_tok": 209,
+      "decode_tok_s_mean": 25.06,
+      "prefill_tok_s_mean": 5356.6,
+      "ttft_ms_mean": 139.6,
+      "gpu_used_mb": null,
+      "reported_size_gib": 3.565,
+      "reported_vram_gib": 2.656,
+      "samples": 2
+    },
+    {
+      "model": "qwen2.5-1.5b",
+      "num_ctx": 4096,
+      "kv_type": "q8_0",
+      "run_tag": "q8_0-ctx4096-r1",
+      "prompt_tok": 209,
+      "decode_tok_s_mean": 25.91,
+      "prefill_tok_s_mean": 5628.23,
+      "ttft_ms_mean": 142.1,
+      "gpu_used_mb": null,
+      "reported_size_gib": 3.401,
+      "reported_vram_gib": 2.61,
+      "samples": 2
+    },
+    {
+      "model": "qwen2.5-1.5b",
+      "num_ctx": 8192,
+      "kv_type": "q8_0",
+      "run_tag": "q8_0-ctx8192-r1",
+      "prompt_tok": 209,
+      "decode_tok_s_mean": 23.2,
+      "prefill_tok_s_mean": 4761.53,
+      "ttft_ms_mean": 150.3,
+      "gpu_used_mb": null,
+      "reported_size_gib": 3.456,
+      "reported_vram_gib": 2.657,
+      "samples": 2
+    },
+    {
+      "model": "qwen2.5-1.5b",
+      "num_ctx": 4096,
+      "kv_type": "q4_0",
+      "run_tag": "q4_0-ctx4096-r1",
+      "prompt_tok": 209,
+      "decode_tok_s_mean": 26.75,
+      "prefill_tok_s_mean": 5702.1,
+      "ttft_ms_mean": 144.5,
+      "gpu_used_mb": null,
+      "reported_size_gib": 3.374,
+      "reported_vram_gib": 2.675,
+      "samples": 2
+    },
+    {
+      "model": "qwen2.5-1.5b",
+      "num_ctx": 8192,
+      "kv_type": "q4_0",
+      "run_tag": "q4_0-ctx8192-r1",
+      "prompt_tok": 209,
+      "decode_tok_s_mean": 26.12,
+      "prefill_tok_s_mean": 5090.22,
+      "ttft_ms_mean": 156.9,
+      "gpu_used_mb": null,
+      "reported_size_gib": 3.401,
+      "reported_vram_gib": 2.61,
+      "samples": 2
+    }
+  ],
+  "long_context": [
+    {
+      "model": "qwen2.5-1.5b",
+      "num_ctx": 8192,
+      "kv_type": "f16",
+      "run_tag": "f16-long8192",
+      "prompt_tok": 6439,
+      "decode_tok_s_mean": 21.77,
+      "prefill_tok_s_mean": 2964.74,
+      "ttft_ms_mean": 2293.4,
+      "gpu_used_mb": 3685,
+      "reported_size_gib": 3.565,
+      "reported_vram_gib": 2.656,
+      "samples": 1
+    },
+    {
+      "model": "qwen2.5-1.5b",
+      "num_ctx": 16384,
+      "kv_type": "f16",
+      "run_tag": "f16-long16384",
+      "prompt_tok": 12669,
+      "decode_tok_s_mean": 15.74,
+      "prefill_tok_s_mean": 2332.04,
+      "ttft_ms_mean": 5572.1,
+      "gpu_used_mb": 3553,
+      "reported_size_gib": 3.819,
+      "reported_vram_gib": 2.562,
+      "samples": 1
+    },
+    {
+      "model": "qwen2.5-1.5b",
+      "num_ctx": 32768,
+      "kv_type": "f16",
+      "run_tag": "f16-long32768",
+      "prompt_tok": 25129,
+      "decode_tok_s_mean": 7.82,
+      "prefill_tok_s_mean": 1547.65,
+      "ttft_ms_mean": 16431.3,
+      "gpu_used_mb": 3025,
+      "reported_size_gib": 4.757,
+      "reported_vram_gib": 2.545,
+      "samples": 1
+    },
+    {
+      "model": "qwen2.5-1.5b",
+      "num_ctx": 8192,
+      "kv_type": "q8_0",
+      "run_tag": "q8_0-long8192",
+      "prompt_tok": 6439,
+      "decode_tok_s_mean": 24.23,
+      "prefill_tok_s_mean": 2956.11,
+      "ttft_ms_mean": 2307.9,
+      "gpu_used_mb": 3697,
+      "reported_size_gib": 3.456,
+      "reported_vram_gib": 2.657,
+      "samples": 1
+    },
+    {
+      "model": "qwen2.5-1.5b",
+      "num_ctx": 16384,
+      "kv_type": "q8_0",
+      "run_tag": "q8_0-long16384",
+      "prompt_tok": 12669,
+      "decode_tok_s_mean": 18.22,
+      "prefill_tok_s_mean": 2351.25,
+      "ttft_ms_mean": 5538.4,
+      "gpu_used_mb": 3601,
+      "reported_size_gib": 3.6,
+      "reported_vram_gib": 2.596,
+      "samples": 1
+    },
+    {
+      "model": "qwen2.5-1.5b",
+      "num_ctx": 32768,
+      "kv_type": "q8_0",
+      "run_tag": "q8_0-long32768",
+      "prompt_tok": 25129,
+      "decode_tok_s_mean": 9.62,
+      "prefill_tok_s_mean": 1550.42,
+      "ttft_ms_mean": 16403.7,
+      "gpu_used_mb": 3162,
+      "reported_size_gib": 4.319,
+      "reported_vram_gib": 2.651,
+      "samples": 1
+    },
+    {
+      "model": "qwen2.5-1.5b",
+      "num_ctx": 8192,
+      "kv_type": "q4_0",
+      "run_tag": "q4_0-long8192",
+      "prompt_tok": 6439,
+      "decode_tok_s_mean": 23.67,
+      "prefill_tok_s_mean": 2954.64,
+      "ttft_ms_mean": 2299.6,
+      "gpu_used_mb": 3659,
+      "reported_size_gib": 3.401,
+      "reported_vram_gib": 2.61,
+      "samples": 1
+    },
+    {
+      "model": "qwen2.5-1.5b",
+      "num_ctx": 16384,
+      "kv_type": "q4_0",
+      "run_tag": "q4_0-long16384",
+      "prompt_tok": 12669,
+      "decode_tok_s_mean": 19.27,
+      "prefill_tok_s_mean": 2442.68,
+      "ttft_ms_mean": 5342.0,
+      "gpu_used_mb": 3615,
+      "reported_size_gib": 3.491,
+      "reported_vram_gib": 2.601,
+      "samples": 1
+    },
+    {
+      "model": "qwen2.5-1.5b",
+      "num_ctx": 32768,
+      "kv_type": "q4_0",
+      "run_tag": "q4_0-long32768",
+      "prompt_tok": 25129,
+      "decode_tok_s_mean": 9.93,
+      "prefill_tok_s_mean": 1599.58,
+      "ttft_ms_mean": 15925.1,
+      "gpu_used_mb": 3129,
+      "reported_size_gib": 4.1,
+      "reported_vram_gib": 2.621,
+      "samples": 1
+    }
+  ],
+  "quality_gate_omnipilot16": {
+    "f16": {
+      "macro_accuracy": 0.4493,
+      "macro_balanced": 0.4221,
+      "letter_ok": 1.0,
+      "per_task_accuracy": {
+        "abstain": 0.45,
+        "emotion28": 0.575,
+        "emotion6": 0.3833,
+        "fact_evidence_noul": 0.5397,
+        "fact_vitaminc": 0.4386,
+        "grounded": 0.2,
+        "intent_clinc": 0.7,
+        "intent_massive": 0.65,
+        "nli_mnli": 0.3,
+        "nli_noul": 0.24,
+        "nli_score": 0.3625,
+        "routing": 0.4437,
+        "tool_choice": 0.5583
+      },
+      "per_task_mean_conf": {
+        "abstain": 0.8302,
+        "emotion28": 0.6608,
+        "emotion6": 0.6856,
+        "fact_evidence_noul": 0.9351,
+        "fact_vitaminc": 0.552,
+        "grounded": 0.9547,
+        "intent_clinc": 0.8253,
+        "intent_massive": 0.7824,
+        "nli_mnli": 0.8921,
+        "nli_noul": 0.9857,
+        "nli_score": 0.8955,
+        "routing": 0.7582,
+        "tool_choice": 0.6946
+      }
+    },
+    "q8_0": {
+      "macro_accuracy": 0.3863,
+      "macro_balanced": 0.3623,
+      "letter_ok": 1.0,
+      "per_task_accuracy": {
+        "abstain": 0.25,
+        "emotion28": 0.5625,
+        "emotion6": 0.3333,
+        "fact_evidence_noul": 0.5238,
+        "fact_vitaminc": 0.4386,
+        "grounded": 0.3,
+        "intent_clinc": 0.47,
+        "intent_massive": 0.4917,
+        "nli_mnli": 0.2714,
+        "nli_noul": 0.22,
+        "nli_score": 0.2625,
+        "routing": 0.3812,
+        "tool_choice": 0.5167
+      },
+      "per_task_mean_conf": {
+        "abstain": 0.7697,
+        "emotion28": 0.6668,
+        "emotion6": 0.6865,
+        "fact_evidence_noul": 0.9511,
+        "fact_vitaminc": 0.5596,
+        "grounded": 0.9429,
+        "intent_clinc": 0.7469,
+        "intent_massive": 0.7151,
+        "nli_mnli": 0.8941,
+        "nli_noul": 0.9651,
+        "nli_score": 0.8924,
+        "routing": 0.7654,
+        "tool_choice": 0.6863
+      }
+    },
+    "q4_0": {
+      "macro_accuracy": 0.1618,
+      "macro_balanced": 0.2985,
+      "letter_ok": 0.0057,
+      "per_task_accuracy": {
+        "abstain": 0.65,
+        "emotion28": 0.075,
+        "emotion6": 0.1417,
+        "fact_evidence_noul": 0.1429,
+        "fact_vitaminc": 0.1053,
+        "grounded": 0.1,
+        "intent_clinc": 0.03,
+        "intent_massive": 0.075,
+        "nli_mnli": 0.1857,
+        "nli_noul": 0.26,
+        "nli_score": 0.15,
+        "routing": 0.0125,
+        "tool_choice": 0.175
+      },
+      "per_task_mean_conf": {
+        "abstain": 0.6258,
+        "emotion28": 0.497,
+        "emotion6": 0.5756,
+        "fact_evidence_noul": 0.2639,
+        "fact_vitaminc": 0.3937,
+        "grounded": 0.2303,
+        "intent_clinc": 0.2618,
+        "intent_massive": 0.531,
+        "nli_mnli": 0.4958,
+        "nli_noul": 0.4382,
+        "nli_score": 0.4076,
+        "routing": 0.3056,
+        "tool_choice": 0.4065
+      }
+    }
+  },
+  "root_cause_base_model": {
+    "f16": {
+      "macro_accuracy": 0.3667,
+      "macro_balanced": 0.3869,
+      "letter_ok": 1.0
+    },
+    "q8_0": {
+      "macro_accuracy": 0.45,
+      "macro_balanced": 0.4563,
+      "letter_ok": 1.0
+    },
+    "q4_0": {
+      "macro_accuracy": 0.05,
+      "macro_balanced": 0.1333,
+      "letter_ok": 0.05
+    }
+  },
+  "conclusions": {
+    "throughput_gain_q8_0": "+11.3% @8k, +15.8% @16k, +23.0% @32k decode；prefill/TTFT 不变",
+    "throughput_gain_q4_0": "+8.7% @8k, +22.4% @16k, +27.0% @32k decode；但输出崩坏",
+    "short_context_caveat": "prompt<1k 时 q8_0 无收益甚至 -10%（209 tok prompt @8k：23.2 vs 25.9 tok/s）；收益从 6k+ prompt 才出现",
+    "memory_saving": "q8_0 减半、q4_0 降至 1/4（与 kv_bytes_per_token 估算一致：1.5B/28层/2KV头/128维 = 28KB/token@f16）",
+    "quality_cost_q8_0": "决策模型 macro 0.4493→0.3863（-6.3 点），letter_ok 仍 1.0；退化集中在低置信任务（abstain -20、intent_clinc -23、intent_massive -15.8 点）",
+    "quality_cost_q4_0": "letter_ok 1.000→0.006，基座模型同样复现（0.05）→ 与 LoRA 无关，是该运行时/GPU 上的 q4_0 KV 路径问题",
+    "mechanism": "q8_0 不破坏格式，只扰动 logits；高置信任务几乎不动（nli_mnli conf 0.892→0.894，acc -2.9 点），低边际任务 top-1 被翻盘",
+    "policy": "决策层固定 f16；长文生成（6k+ prompt）可试 q8_0，但必须先过人工质量验收；q4_0 禁用",
+    "reproducibility": "q8_0 全量复跑结果与首跑逐位一致（0.3863/0.3623），非随机噪声"
+  }
+}
